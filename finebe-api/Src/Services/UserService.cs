@@ -42,7 +42,7 @@ public class UserService : IUserService
         }
         else
         {
-            var errors = string.Join("\n", result.Errors.Select(e => e.Description));
+            var errors = string.Join("; ", result.Errors.Select(e => e.Description));
             return Result<User>.Fail(errors);
         }
     }
@@ -83,7 +83,7 @@ public class UserService : IUserService
         }
         else
         {
-            var errors = string.Join("\n", result.Errors.Select(e => e.Description));
+            var errors = string.Join("; ", result.Errors.Select(e => e.Description));
             return Result<User>.Fail(errors);
         }
     }
