@@ -7,11 +7,11 @@ namespace finebe_api.Services;
 public interface IUserService
 {
     Task<Result<User>> CreateUserAsync(User user, string password);
-    Task<Result<User>> GetUserByIdAsync(string userId);
+    Task<Result<User>> GetUserByIdAsync(Guid userId);
     Task<Result<User>> GetByUsernameAsync(string username);
     Task<Result<IEnumerable<User>>> GetAllUsersAsync();
-    Task<Result<User>> UpdateUserAsync(User user);
-    Task<Result<bool>> DeleteUserAsync(User user);
+    Task<Result<User>> UpdateUserAsync(Guid userId, User user);
+    Task<Result<bool>> DeleteUserAsync(Guid userId);
 }
 
 public class UserService : IUserService
@@ -28,8 +28,8 @@ public class UserService : IUserService
         var result = await _userManager.CreateAsync(user, password);
         if (result.Succeeded)
         {
-            // Retrieve the user after creation to get the GUID
-            user = await _userManager.FindByNameAsync(user.UserName);
+            // Retrieve the user after creation
+            user = await _userManager.FindByIdAsync(user.Id.ToString());
             if (user != null)
             {
                 return Result<User>.Success(user, "User created successfully.");
@@ -47,9 +47,9 @@ public class UserService : IUserService
         }
     }
 
-    public async Task<Result<User>> GetUserByIdAsync(string userId)
+    public async Task<Result<User>> GetUserByIdAsync(Guid userId)
     {
-        var user = await _userManager.FindByIdAsync(userId);
+        var user = await _userManager.FindByIdAsync(userId.ToString());
         return user != null ? Result<User>.Success(user) : Result<User>.Fail("User not found.");
     }
 
@@ -65,41 +65,50 @@ public class UserService : IUserService
         return Result<IEnumerable<User>>.Success(users);
     }
 
-    public async Task<Result<User>> UpdateUserAsync(User user)
+    public async Task<Result<User>> UpdateUserAsync(Guid userId, User user)
     {
-        var result = await _userManager.UpdateAsync(user);
-        if (result.Succeeded)
+        var existingUser = await _userManager.FindByIdAsync(userId.ToString());
+        if (existingUser != null)
         {
-            // Retrieve the user after creation to get the GUID
-            user = await _userManager.FindByNameAsync(user.UserName);
-            if (user != null)
+            user.Id = existingUser.Id;
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
             {
                 return Result<User>.Success(user, "User updated successfully.");
             }
             else
             {
-                return Result<User>.Fail("Failed to retrieve user.");
+                var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+                return Result<User>.Fail(errors);
             }
         }
         else
         {
-            var errors = string.Join("; ", result.Errors.Select(e => e.Description));
-            return Result<User>.Fail(errors);
+            // If user retrieval fails, return failure
+            return Result<User>.Fail("Failed to retrieve user.");
         }
     }
 
-    public async Task<Result<bool>> DeleteUserAsync(User user)
+    public async Task<Result<bool>> DeleteUserAsync(Guid userId)
     {
-        var result = await _userManager.DeleteAsync(user);
-        if (result.Succeeded)
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if (user != null)
         {
-            return Result<bool>.Success(true, "User deleted successfully.");
+            var result = await _userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                return Result<bool>.Success(true, "User deleted successfully.");
+            }
+            else
+            {
+                var errors = string.Join("\n", result.Errors.Select(e => e.Description));
+                return Result<bool>.Fail(errors);
+            }
         }
         else
         {
-            var errors = string.Join("\n", result.Errors.Select(e => e.Description));
-            return Result<bool>.Fail(errors);
+            // If user retrieval fails, return failure
+            return Result<bool>.Fail("Failed to retrieve user.");
         }
-
     }
 }

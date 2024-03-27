@@ -28,16 +28,16 @@ public class UserController : ControllerBase
         return result.Succeeded ? Ok(result) : BadRequest(result);
     }
 
-    [HttpGet("{userId}")]
+    [HttpGet("ByUserId/{userId}")]
     [ProducesResponseType(typeof(Result<User>), 200)]
     [ProducesResponseType(typeof(Result), 404)]
-    public async Task<IActionResult> GetUserById(string userId)
+    public async Task<IActionResult> GetUserById(Guid userId)
     {
         var result = await _userService.GetUserByIdAsync(userId);
         return result.Succeeded ? Ok(result) : NotFound(result);
     }
 
-    [HttpGet("{username}")]
+    [HttpGet("ByUsername/{username}")]
     [ProducesResponseType(typeof(Result<User>), 200)]
     [ProducesResponseType(typeof(Result), 404)]
     public async Task<IActionResult> GetByUsername(string username)
@@ -46,7 +46,7 @@ public class UserController : ControllerBase
         return result.Succeeded ? Ok(result) : NotFound(result);
     }
 
-    [HttpGet]
+    [HttpGet("GetAll")]
     [ProducesResponseType(typeof(Result<IEnumerable<User>>), 200)]
     [ProducesResponseType(typeof(Result), 404)]
     public async Task<IActionResult> GetAllUsers()
@@ -58,18 +58,18 @@ public class UserController : ControllerBase
     [HttpPut]
     [ProducesResponseType(typeof(Result<User>), 200)]
     [ProducesResponseType(typeof(Result), 400)]
-    public async Task<IActionResult> UpdateUser(User user)
+    public async Task<IActionResult> UpdateUser(Guid userId, User user)
     {
-        var result = await _userService.UpdateUserAsync(user);
+        var result = await _userService.UpdateUserAsync(userId, user);
         return result.Succeeded ? Ok(result) : BadRequest(result);
     }
 
-    [HttpDelete]
+    [HttpDelete("ByUserId/{userId}")]
     [ProducesResponseType(typeof(Result<bool>), 200)]
     [ProducesResponseType(typeof(Result), 400)]
-    public async Task<IActionResult> DeleteUser(User user)
+    public async Task<IActionResult> DeleteUser(Guid userId)
     {
-        var result = await _userService.DeleteUserAsync(user);
+        var result = await _userService.DeleteUserAsync(userId);
         return result.Succeeded ? Ok(result) : BadRequest(result);
     }
 }
