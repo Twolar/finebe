@@ -6,9 +6,12 @@ namespace finebe_api.Models;
 
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    private readonly IConfiguration _configuration;
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IConfiguration configuration)
         : base(options)
     {
+        _configuration = configuration;
     }
 
     // Add DbSets for your entities
@@ -23,18 +26,22 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
                 new IdentityRole<Guid> { Id = Guid.NewGuid(), Name = "User", NormalizedName = "USER" }
             );
 
+            // Load password from configuration
+            var defaultUserPassword = Environment.GetEnvironmentVariable("DEFAULT_USER_PASSWORD");
+
+            // TODO: FromProd: Remove me later...
             // Seed default user
             var hasher = new PasswordHasher<ApplicationUser>();
             modelBuilder.Entity<ApplicationUser>().HasData(
                 new ApplicationUser
                 {
                     Id = Guid.NewGuid(),
-                    UserName = "admin@example.com",
-                    NormalizedUserName = "ADMIN@EXAMPLE.COM",
-                    Email = "admin@example.com",
-                    NormalizedEmail = "ADMIN@EXAMPLE.COM",
+                    UserName = "taylor@finebe.com",
+                    NormalizedUserName = "TAYLOR@FINEBE.COM",
+                    Email = "taylor@finebe.com",
+                    NormalizedEmail = "TAYLOR@FINEBE.COM",
                     EmailConfirmed = true,
-                    PasswordHash = hasher.HashPassword(null, "Password123$")
+                    PasswordHash = hasher.HashPassword(null, defaultUserPassword)
                 }
             );
 

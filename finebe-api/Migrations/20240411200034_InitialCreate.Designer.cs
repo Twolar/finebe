@@ -11,8 +11,8 @@ using finebe_api.Models;
 namespace finebe_api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240411193534_SeedData")]
-    partial class SeedData
+    [Migration("20240411200034_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,13 +49,13 @@ namespace finebe_api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("b3023489-80de-4c3f-8c2d-050317c76372"),
+                            Id = new Guid("b121d0fe-a5d9-45ab-a530-aeae2954e599"),
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = new Guid("e3207b90-0f97-438d-b7e5-464eebc22c7a"),
+                            Id = new Guid("28f97f41-2f84-4b4d-86cd-24fafd12295c"),
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -227,18 +227,18 @@ namespace finebe_api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("ab43bbda-19d5-48b8-a514-0f752559908c"),
+                            Id = new Guid("503a295c-fbe8-4e87-bd0d-f679be5f05e8"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7a17851b-141b-4f66-a355-67de02053d81",
-                            Email = "admin@example.com",
+                            ConcurrencyStamp = "3a9c2545-d1ec-4c64-a16c-baa9928ee7ed",
+                            Email = "taylor@finebe.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@EXAMPLE.COM",
-                            NormalizedUserName = "ADMIN@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAENuuuzf8/5v9iEncqHNfAprgkJly+8spjyvtSCTy1P55qhKsXjv4H3BnLpgSJa5yEA==",
+                            NormalizedEmail = "TAYLOR@FINEBE.COM",
+                            NormalizedUserName = "TAYLOR@FINEBE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJnRYPj/b8KMyQZilZV3wGLacKsTRkLAaH6e9vO/gEMR0NfLifm/mEvkH04ho2OwHw==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
-                            UserName = "admin@example.com"
+                            UserName = "taylor@finebe.com"
                         });
                 });
 

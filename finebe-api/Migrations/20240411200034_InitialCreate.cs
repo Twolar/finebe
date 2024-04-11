@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace finebe_api.Migrations
 {
     /// <inheritdoc />
@@ -155,6 +157,20 @@ namespace finebe_api.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { new Guid("28f97f41-2f84-4b4d-86cd-24fafd12295c"), null, "User", "USER" },
+                    { new Guid("b121d0fe-a5d9-45ab-a530-aeae2954e599"), null, "Admin", "ADMIN" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { new Guid("503a295c-fbe8-4e87-bd0d-f679be5f05e8"), 0, "3a9c2545-d1ec-4c64-a16c-baa9928ee7ed", "taylor@finebe.com", true, false, null, "TAYLOR@FINEBE.COM", "TAYLOR@FINEBE.COM", "AQAAAAIAAYagAAAAEJnRYPj/b8KMyQZilZV3wGLacKsTRkLAaH6e9vO/gEMR0NfLifm/mEvkH04ho2OwHw==", null, false, null, false, "taylor@finebe.com" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
