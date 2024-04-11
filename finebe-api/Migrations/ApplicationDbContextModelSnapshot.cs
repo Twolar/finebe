@@ -46,13 +46,13 @@ namespace finebe_api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("b121d0fe-a5d9-45ab-a530-aeae2954e599"),
+                            Id = new Guid("ad64bad7-b536-4aaa-9563-ee75ab2eec81"),
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = new Guid("28f97f41-2f84-4b4d-86cd-24fafd12295c"),
+                            Id = new Guid("3ec68b5b-e5bc-48b7-8149-76cd96d08fb1"),
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -224,18 +224,111 @@ namespace finebe_api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("503a295c-fbe8-4e87-bd0d-f679be5f05e8"),
+                            Id = new Guid("815c84dc-6e65-4220-89b4-12b1598f07ab"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3a9c2545-d1ec-4c64-a16c-baa9928ee7ed",
+                            ConcurrencyStamp = "3ab70658-54cc-4361-8542-14924f7ff161",
                             Email = "taylor@finebe.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "TAYLOR@FINEBE.COM",
                             NormalizedUserName = "TAYLOR@FINEBE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJnRYPj/b8KMyQZilZV3wGLacKsTRkLAaH6e9vO/gEMR0NfLifm/mEvkH04ho2OwHw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDinykteAfjXodCj6z5BuU37KiXJfUV02WmdRsMZuuoHXDWEXgLH6BfMTdiA/1XXTw==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "taylor@finebe.com"
+                        },
+                        new
+                        {
+                            Id = new Guid("780d354c-2707-4d84-84d5-1539a36d3983"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "8ca9bd5f-9582-495c-be31-36ccea6b7563",
+                            Email = "user1@example.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "user1@example.com"
+                        },
+                        new
+                        {
+                            Id = new Guid("bd6e75b1-15d9-4bbc-a955-37f31ed808c6"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "2a3021cc-48a0-428c-a665-761e33ae8637",
+                            Email = "user2@example.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "user2@example.com"
+                        },
+                        new
+                        {
+                            Id = new Guid("e5239666-7a78-4cd0-8a58-236000bfc9d9"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "f64c93b4-45de-4b64-990d-2020ea4f83b7",
+                            Email = "user3@example.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "user3@example.com"
+                        });
+                });
+
+            modelBuilder.Entity("finebe_api.Models.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 525030615,
+                            Amount = 60m,
+                            UserId = new Guid("780d354c-2707-4d84-84d5-1539a36d3983")
+                        },
+                        new
+                        {
+                            Id = 525030616,
+                            Amount = 20m,
+                            UserId = new Guid("780d354c-2707-4d84-84d5-1539a36d3983")
+                        },
+                        new
+                        {
+                            Id = -2015634499,
+                            Amount = 40m,
+                            UserId = new Guid("bd6e75b1-15d9-4bbc-a955-37f31ed808c6")
+                        },
+                        new
+                        {
+                            Id = -2015634498,
+                            Amount = 50m,
+                            UserId = new Guid("bd6e75b1-15d9-4bbc-a955-37f31ed808c6")
+                        },
+                        new
+                        {
+                            Id = 540153639,
+                            Amount = 20m,
+                            UserId = new Guid("e5239666-7a78-4cd0-8a58-236000bfc9d9")
+                        },
+                        new
+                        {
+                            Id = 540153640,
+                            Amount = 40m,
+                            UserId = new Guid("e5239666-7a78-4cd0-8a58-236000bfc9d9")
                         });
                 });
 
@@ -288,6 +381,17 @@ namespace finebe_api.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("finebe_api.Models.Order", b =>
+                {
+                    b.HasOne("finebe_api.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

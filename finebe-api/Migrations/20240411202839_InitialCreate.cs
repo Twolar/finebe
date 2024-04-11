@@ -158,19 +158,58 @@ namespace finebe_api.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Amount = table.Column<decimal>(type: "TEXT", nullable: false),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("28f97f41-2f84-4b4d-86cd-24fafd12295c"), null, "User", "USER" },
-                    { new Guid("b121d0fe-a5d9-45ab-a530-aeae2954e599"), null, "Admin", "ADMIN" }
+                    { new Guid("3ec68b5b-e5bc-48b7-8149-76cd96d08fb1"), null, "User", "USER" },
+                    { new Guid("ad64bad7-b536-4aaa-9563-ee75ab2eec81"), null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("503a295c-fbe8-4e87-bd0d-f679be5f05e8"), 0, "3a9c2545-d1ec-4c64-a16c-baa9928ee7ed", "taylor@finebe.com", true, false, null, "TAYLOR@FINEBE.COM", "TAYLOR@FINEBE.COM", "AQAAAAIAAYagAAAAEJnRYPj/b8KMyQZilZV3wGLacKsTRkLAaH6e9vO/gEMR0NfLifm/mEvkH04ho2OwHw==", null, false, null, false, "taylor@finebe.com" });
+                values: new object[,]
+                {
+                    { new Guid("780d354c-2707-4d84-84d5-1539a36d3983"), 0, "8ca9bd5f-9582-495c-be31-36ccea6b7563", "user1@example.com", false, false, null, null, null, null, null, false, null, false, "user1@example.com" },
+                    { new Guid("815c84dc-6e65-4220-89b4-12b1598f07ab"), 0, "3ab70658-54cc-4361-8542-14924f7ff161", "taylor@finebe.com", true, false, null, "TAYLOR@FINEBE.COM", "TAYLOR@FINEBE.COM", "AQAAAAIAAYagAAAAEDinykteAfjXodCj6z5BuU37KiXJfUV02WmdRsMZuuoHXDWEXgLH6BfMTdiA/1XXTw==", null, false, null, false, "taylor@finebe.com" },
+                    { new Guid("bd6e75b1-15d9-4bbc-a955-37f31ed808c6"), 0, "2a3021cc-48a0-428c-a665-761e33ae8637", "user2@example.com", false, false, null, null, null, null, null, false, null, false, "user2@example.com" },
+                    { new Guid("e5239666-7a78-4cd0-8a58-236000bfc9d9"), 0, "f64c93b4-45de-4b64-990d-2020ea4f83b7", "user3@example.com", false, false, null, null, null, null, null, false, null, false, "user3@example.com" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Orders",
+                columns: new[] { "Id", "Amount", "UserId" },
+                values: new object[,]
+                {
+                    { -2015634499, 40m, new Guid("bd6e75b1-15d9-4bbc-a955-37f31ed808c6") },
+                    { -2015634498, 50m, new Guid("bd6e75b1-15d9-4bbc-a955-37f31ed808c6") },
+                    { 525030615, 60m, new Guid("780d354c-2707-4d84-84d5-1539a36d3983") },
+                    { 525030616, 20m, new Guid("780d354c-2707-4d84-84d5-1539a36d3983") },
+                    { 540153639, 20m, new Guid("e5239666-7a78-4cd0-8a58-236000bfc9d9") },
+                    { 540153640, 40m, new Guid("e5239666-7a78-4cd0-8a58-236000bfc9d9") }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -208,6 +247,11 @@ namespace finebe_api.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_UserId",
+                table: "Orders",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -227,6 +271,9 @@ namespace finebe_api.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

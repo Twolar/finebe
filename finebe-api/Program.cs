@@ -19,15 +19,25 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
 
+// Configure the OData models
 var modelBuilder = new ODataConventionModelBuilder();
-    modelBuilder.EntityType<Order>();
-    modelBuilder.EntitySet<Customer>("Customers");
-    modelBuilder.EntitySet<ApplicationUser>("Users");
+modelBuilder.EntitySet<Order>("Orders");
+modelBuilder.EntitySet<ApplicationUser>("Users");
 
+// Add OData support
 builder.Services.AddControllers().AddOData(
-    options => options.Select().Filter().OrderBy().Expand().Count().SetMaxTop(null).AddRouteComponents(
-        "odata",
-        modelBuilder.GetEdmModel()));
+    options => options
+        .Select()
+        .Filter()
+        .OrderBy()
+        .Expand()
+        .Count()
+        .SetMaxTop(null)
+        .AddRouteComponents(
+            "odata",
+            modelBuilder.GetEdmModel()
+        )
+);
 
 var app = builder.Build();
 
