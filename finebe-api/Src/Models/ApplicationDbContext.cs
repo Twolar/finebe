@@ -67,7 +67,7 @@ namespace finebe_api.Models
                 {
                     var order = new Order
                     {
-                        Id = (user.Id.GetHashCode() - 1) * 2 + i,
+                        Id = Guid.NewGuid(),
                         Amount = new Random().Next(1, 9) * 10,
                         UserId = user.Id
                     };

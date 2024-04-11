@@ -162,8 +162,7 @@ namespace finebe_api.Migrations
                 name: "Orders",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Amount = table.Column<decimal>(type: "TEXT", nullable: false),
                     UserId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
@@ -183,8 +182,8 @@ namespace finebe_api.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("3ec68b5b-e5bc-48b7-8149-76cd96d08fb1"), null, "User", "USER" },
-                    { new Guid("ad64bad7-b536-4aaa-9563-ee75ab2eec81"), null, "Admin", "ADMIN" }
+                    { new Guid("b2455efb-fd98-4994-b847-d1cb90172ae8"), null, "User", "USER" },
+                    { new Guid("e790f70b-d4ae-4fb4-8fd8-4de3eb77d844"), null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.InsertData(
@@ -192,10 +191,10 @@ namespace finebe_api.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { new Guid("780d354c-2707-4d84-84d5-1539a36d3983"), 0, "8ca9bd5f-9582-495c-be31-36ccea6b7563", "user1@example.com", false, false, null, null, null, null, null, false, null, false, "user1@example.com" },
-                    { new Guid("815c84dc-6e65-4220-89b4-12b1598f07ab"), 0, "3ab70658-54cc-4361-8542-14924f7ff161", "taylor@finebe.com", true, false, null, "TAYLOR@FINEBE.COM", "TAYLOR@FINEBE.COM", "AQAAAAIAAYagAAAAEDinykteAfjXodCj6z5BuU37KiXJfUV02WmdRsMZuuoHXDWEXgLH6BfMTdiA/1XXTw==", null, false, null, false, "taylor@finebe.com" },
-                    { new Guid("bd6e75b1-15d9-4bbc-a955-37f31ed808c6"), 0, "2a3021cc-48a0-428c-a665-761e33ae8637", "user2@example.com", false, false, null, null, null, null, null, false, null, false, "user2@example.com" },
-                    { new Guid("e5239666-7a78-4cd0-8a58-236000bfc9d9"), 0, "f64c93b4-45de-4b64-990d-2020ea4f83b7", "user3@example.com", false, false, null, null, null, null, null, false, null, false, "user3@example.com" }
+                    { new Guid("23940176-5b4b-422f-9b82-2e74f18620e8"), 0, "68806551-c54c-4841-acff-53edaf1d2b11", "user3@example.com", false, false, null, null, null, null, null, false, null, false, "user3@example.com" },
+                    { new Guid("422aac77-9248-4663-adfe-a95137bda5fc"), 0, "6a4243e3-9a3c-4065-a7c5-45fae3cb7135", "user1@example.com", false, false, null, null, null, null, null, false, null, false, "user1@example.com" },
+                    { new Guid("8be9daeb-9c8b-4ed3-b638-fc3c47520384"), 0, "d3e876a0-9c64-4fc7-9e3e-2763f126b311", "user2@example.com", false, false, null, null, null, null, null, false, null, false, "user2@example.com" },
+                    { new Guid("dbba3695-3a0a-4c4f-9a4f-7f37d4af388c"), 0, "e810787d-0140-4bad-9b7e-14ebe621927d", "taylor@finebe.com", true, false, null, "TAYLOR@FINEBE.COM", "TAYLOR@FINEBE.COM", "AQAAAAIAAYagAAAAEItbF72xNnhCDVK7Z5jjFO1QnGOhVN9kFet+QIgtJAdLEblojsy/23NqpQoWU5/XWg==", null, false, null, false, "taylor@finebe.com" }
                 });
 
             migrationBuilder.InsertData(
@@ -203,12 +202,12 @@ namespace finebe_api.Migrations
                 columns: new[] { "Id", "Amount", "UserId" },
                 values: new object[,]
                 {
-                    { -2015634499, 40m, new Guid("bd6e75b1-15d9-4bbc-a955-37f31ed808c6") },
-                    { -2015634498, 50m, new Guid("bd6e75b1-15d9-4bbc-a955-37f31ed808c6") },
-                    { 525030615, 60m, new Guid("780d354c-2707-4d84-84d5-1539a36d3983") },
-                    { 525030616, 20m, new Guid("780d354c-2707-4d84-84d5-1539a36d3983") },
-                    { 540153639, 20m, new Guid("e5239666-7a78-4cd0-8a58-236000bfc9d9") },
-                    { 540153640, 40m, new Guid("e5239666-7a78-4cd0-8a58-236000bfc9d9") }
+                    { new Guid("02115383-d61c-40c6-b39d-82c2f3b3f575"), 10m, new Guid("422aac77-9248-4663-adfe-a95137bda5fc") },
+                    { new Guid("04109747-2a90-4360-916c-c5013f59e179"), 60m, new Guid("23940176-5b4b-422f-9b82-2e74f18620e8") },
+                    { new Guid("1d28a00e-11d4-4356-8d5f-0df5514c8e9b"), 70m, new Guid("8be9daeb-9c8b-4ed3-b638-fc3c47520384") },
+                    { new Guid("862e2a88-3be5-4b5d-b0b9-e8c055ff334f"), 20m, new Guid("23940176-5b4b-422f-9b82-2e74f18620e8") },
+                    { new Guid("94005f6a-11a5-4049-8913-7593014b420b"), 70m, new Guid("422aac77-9248-4663-adfe-a95137bda5fc") },
+                    { new Guid("e7f5e8e8-364b-487d-8fdc-142d2e938dd9"), 70m, new Guid("8be9daeb-9c8b-4ed3-b638-fc3c47520384") }
                 });
 
             migrationBuilder.CreateIndex(

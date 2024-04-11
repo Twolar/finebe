@@ -25,7 +25,7 @@ namespace finebe_api.Controllers
         }
 
         [EnableQuery]
-        public ActionResult<Order> Get([FromODataUri] int key)
+        public ActionResult<Order> Get([FromODataUri] Guid key)
         {
             // Assuming you have a User property in your Order entity pointing to the ApplicationUser
             // You can include ApplicationUser data if needed

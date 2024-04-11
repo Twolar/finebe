@@ -11,7 +11,7 @@ using finebe_api.Models;
 namespace finebe_api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240411202839_InitialCreate")]
+    [Migration("20240411203443_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -49,13 +49,13 @@ namespace finebe_api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("ad64bad7-b536-4aaa-9563-ee75ab2eec81"),
+                            Id = new Guid("e790f70b-d4ae-4fb4-8fd8-4de3eb77d844"),
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = new Guid("3ec68b5b-e5bc-48b7-8149-76cd96d08fb1"),
+                            Id = new Guid("b2455efb-fd98-4994-b847-d1cb90172ae8"),
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -227,24 +227,24 @@ namespace finebe_api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("815c84dc-6e65-4220-89b4-12b1598f07ab"),
+                            Id = new Guid("dbba3695-3a0a-4c4f-9a4f-7f37d4af388c"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3ab70658-54cc-4361-8542-14924f7ff161",
+                            ConcurrencyStamp = "e810787d-0140-4bad-9b7e-14ebe621927d",
                             Email = "taylor@finebe.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "TAYLOR@FINEBE.COM",
                             NormalizedUserName = "TAYLOR@FINEBE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDinykteAfjXodCj6z5BuU37KiXJfUV02WmdRsMZuuoHXDWEXgLH6BfMTdiA/1XXTw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEItbF72xNnhCDVK7Z5jjFO1QnGOhVN9kFet+QIgtJAdLEblojsy/23NqpQoWU5/XWg==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "taylor@finebe.com"
                         },
                         new
                         {
-                            Id = new Guid("780d354c-2707-4d84-84d5-1539a36d3983"),
+                            Id = new Guid("422aac77-9248-4663-adfe-a95137bda5fc"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8ca9bd5f-9582-495c-be31-36ccea6b7563",
+                            ConcurrencyStamp = "6a4243e3-9a3c-4065-a7c5-45fae3cb7135",
                             Email = "user1@example.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
@@ -254,9 +254,9 @@ namespace finebe_api.Migrations
                         },
                         new
                         {
-                            Id = new Guid("bd6e75b1-15d9-4bbc-a955-37f31ed808c6"),
+                            Id = new Guid("8be9daeb-9c8b-4ed3-b638-fc3c47520384"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2a3021cc-48a0-428c-a665-761e33ae8637",
+                            ConcurrencyStamp = "d3e876a0-9c64-4fc7-9e3e-2763f126b311",
                             Email = "user2@example.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
@@ -266,9 +266,9 @@ namespace finebe_api.Migrations
                         },
                         new
                         {
-                            Id = new Guid("e5239666-7a78-4cd0-8a58-236000bfc9d9"),
+                            Id = new Guid("23940176-5b4b-422f-9b82-2e74f18620e8"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f64c93b4-45de-4b64-990d-2020ea4f83b7",
+                            ConcurrencyStamp = "68806551-c54c-4841-acff-53edaf1d2b11",
                             Email = "user3@example.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
@@ -280,9 +280,9 @@ namespace finebe_api.Migrations
 
             modelBuilder.Entity("finebe_api.Models.Order", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("TEXT");
@@ -299,39 +299,39 @@ namespace finebe_api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 525030615,
+                            Id = new Guid("02115383-d61c-40c6-b39d-82c2f3b3f575"),
+                            Amount = 10m,
+                            UserId = new Guid("422aac77-9248-4663-adfe-a95137bda5fc")
+                        },
+                        new
+                        {
+                            Id = new Guid("94005f6a-11a5-4049-8913-7593014b420b"),
+                            Amount = 70m,
+                            UserId = new Guid("422aac77-9248-4663-adfe-a95137bda5fc")
+                        },
+                        new
+                        {
+                            Id = new Guid("e7f5e8e8-364b-487d-8fdc-142d2e938dd9"),
+                            Amount = 70m,
+                            UserId = new Guid("8be9daeb-9c8b-4ed3-b638-fc3c47520384")
+                        },
+                        new
+                        {
+                            Id = new Guid("1d28a00e-11d4-4356-8d5f-0df5514c8e9b"),
+                            Amount = 70m,
+                            UserId = new Guid("8be9daeb-9c8b-4ed3-b638-fc3c47520384")
+                        },
+                        new
+                        {
+                            Id = new Guid("04109747-2a90-4360-916c-c5013f59e179"),
                             Amount = 60m,
-                            UserId = new Guid("780d354c-2707-4d84-84d5-1539a36d3983")
+                            UserId = new Guid("23940176-5b4b-422f-9b82-2e74f18620e8")
                         },
                         new
                         {
-                            Id = 525030616,
+                            Id = new Guid("862e2a88-3be5-4b5d-b0b9-e8c055ff334f"),
                             Amount = 20m,
-                            UserId = new Guid("780d354c-2707-4d84-84d5-1539a36d3983")
-                        },
-                        new
-                        {
-                            Id = -2015634499,
-                            Amount = 40m,
-                            UserId = new Guid("bd6e75b1-15d9-4bbc-a955-37f31ed808c6")
-                        },
-                        new
-                        {
-                            Id = -2015634498,
-                            Amount = 50m,
-                            UserId = new Guid("bd6e75b1-15d9-4bbc-a955-37f31ed808c6")
-                        },
-                        new
-                        {
-                            Id = 540153639,
-                            Amount = 20m,
-                            UserId = new Guid("e5239666-7a78-4cd0-8a58-236000bfc9d9")
-                        },
-                        new
-                        {
-                            Id = 540153640,
-                            Amount = 40m,
-                            UserId = new Guid("e5239666-7a78-4cd0-8a58-236000bfc9d9")
+                            UserId = new Guid("23940176-5b4b-422f-9b82-2e74f18620e8")
                         });
                 });
 
