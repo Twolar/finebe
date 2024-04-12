@@ -11,5 +11,5 @@ public class Order
     public Guid UserId { get; set; } // Replace CustomerId with UserId
 
     [ForeignKey("UserId")]
-    public ApplicationUser User { get; set; } // Replace Customer with ApplicationUser
+    public ApplicationUser? User { get; set; } // Replace Customer with ApplicationUser
 }
