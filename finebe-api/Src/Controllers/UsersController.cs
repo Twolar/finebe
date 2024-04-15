@@ -1,98 +1,107 @@
 ﻿using finebe_api.Models;
-using Microsoft.AspNetCore.OData.Query;
-using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.OData.Results;
-using Microsoft.AspNetCore.OData.Formatter;
+using AspNetCoreHero.Results;
 
-namespace finebe_api.Controllers
+namespace finebe_api.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class UsersController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class UsersController : ODataController
+    private readonly ApplicationDbContext _context;
+    private readonly UserManager<ApplicationUser> _userManager;
+
+    public UsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
     {
-        private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
+        _context = context;
+        _userManager = userManager;
+    }
+    
+    [HttpGet]
+    public IActionResult Get()
+    {
+        return Ok(_context.Users.ToList());
+    }
 
-        public UsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> Get(Guid id)
+    {
+        var user = await _userManager.FindByIdAsync(id.ToString());
+        if (user == null)
         {
-            _context = context;
-            _userManager = userManager;
+            return NotFound();
         }
-        
-        [HttpGet]
-        [EnableQuery]
-        public IQueryable<ApplicationUser> Get()
+        return Ok(user);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Post([FromBody] ApplicationUser user)
+    {
+        if (!ModelState.IsValid)
         {
-            return _context.Users;
-        }
-
-        [HttpGet("{key}")]  
-        [EnableQuery]
-        public SingleResult<ApplicationUser> Get([FromODataUri] Guid key)
-        {
-            return SingleResult.Create(_context.Users.Where(order => order.Id == key));
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] ApplicationUser user)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var result = await _userManager.CreateAsync(user);
-
-            if (result.Succeeded)
-            {
-                return Created(user);
-            }
-            else
-            {
-                return BadRequest(result.Errors);
-            }
+            return BadRequest(ModelState);
         }
 
-        [HttpPut("{key}")]
-        public async Task<IActionResult> Put([FromODataUri] Guid key, [FromBody] ApplicationUser user)
+        var result = await _userManager.CreateAsync(user);
+
+        if (result.Succeeded)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            return CreatedAtAction(nameof(Get), new { id = user.Id }, user);
+        }
+        else
+        {
+            return BadRequest(result.Errors);
+        }
+    }
 
-            if (key != user.Id)
-            {
-                return BadRequest();
-            }
-
-            var result = await _userManager.UpdateAsync(user);
-
-            if (result.Succeeded)
-            {
-                return NoContent();
-            }
-            else
-            {
-                return BadRequest(result.Errors);
-            }
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Put(Guid id, [FromBody] ApplicationUser user)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
         }
 
-        [HttpDelete("{key}")]
-        public async Task<IActionResult> Delete([FromODataUri] Guid key)
+        var existingUser = await _userManager.FindByIdAsync(id.ToString());
+        if (existingUser == null)
         {
-            var user = await _context.Users.FindAsync(key);
-            if (user == null)
-            {
-                return NotFound();
-            }
+            return NotFound();
+        }
 
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+        // Update the details of the user here
+        // For example: existingUser.Email = user.Email;
 
+        var result = await _userManager.UpdateAsync(existingUser);
+
+        if (result.Succeeded)
+        {
             return NoContent();
+        }
+        else
+        {
+            return BadRequest(result.Errors);
+        }
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var user = await _userManager.FindByIdAsync(id.ToString());
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        var result = await _userManager.DeleteAsync(user);
+
+        if (result.Succeeded)
+        {
+            return NoContent();
+        }
+        else
+        {
+            return BadRequest(result.Errors);
         }
     }
 }

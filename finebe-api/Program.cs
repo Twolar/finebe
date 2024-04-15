@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.OData;
 using finebe_api.Models;
-using Microsoft.OData.ModelBuilder;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,25 +18,15 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
 
-// Configure the OData models
-var modelBuilder = new ODataConventionModelBuilder();
-modelBuilder.EntitySet<Order>("Orders");
-modelBuilder.EntitySet<ApplicationUser>("Users");
+builder.Services.AddAuthorization();
+builder.Services.AddControllers();
 
-// Add OData support
-builder.Services.AddControllers().AddOData(
-    options => options
-        .Select()
-        .Filter()
-        .OrderBy()
-        .Expand()
-        .Count()
-        .SetMaxTop(null)
-        .AddRouteComponents(
-            "odata",
-            modelBuilder.GetEdmModel()
-        )
-);
+// Add Swagger services
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "FinebeAPI", Version = "v1" });
+});
 
 var app = builder.Build();
 
@@ -46,6 +35,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     app.UseMigrationsEndPoint();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "FinebeAPI V1");
+    });
 }
 else
 {
@@ -60,6 +54,6 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints => endpoints.MapControllers());
+app.MapControllers();
 
 app.Run();
