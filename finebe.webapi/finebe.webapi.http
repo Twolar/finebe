@@ -1,0 +1,6 @@
+@finebe.webapi_HostAddress = http://localhost:5048
+
+GET {{finebe.webapi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
