@@ -37,6 +37,9 @@ builder.Services.AddAuthentication(options =>
     options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
 });
 
+// Add Authorization services
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 app.UseAuthentication();
