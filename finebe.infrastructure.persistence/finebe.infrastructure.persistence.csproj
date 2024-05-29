@@ -18,4 +18,8 @@
     <ProjectReference Include="..\finebe.entities\finebe.entities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Context/" />
+  </ItemGroup>
+
 </Project>

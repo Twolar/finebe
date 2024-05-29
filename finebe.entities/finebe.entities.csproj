@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <Folder Include="Identity/" />
+    <Folder Include="ResetPassword/ValidateResetTokenModel/" />
   </ItemGroup>
 
 </Project>

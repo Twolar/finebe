@@ -1,7 +1,13 @@
+using System.Text;
+using finebe.core.services.Messaging;
 using finebe.entities.Identity;
+using finebe.entities.Settings;
+using finebe.infrastructure.Messaging;
 using finebe.infrastructure.persistence;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,6 +46,37 @@ builder.Services.AddAuthentication(options =>
 // Add Authorization services
 builder.Services.AddAuthorization();
 
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+builder.Services.Configure<JwtSettings>(jwtSettings);
+
+var secret = Encoding.ASCII.GetBytes(jwtSettings.Get<JwtSettings>().Secret);
+
+// Adding authentication services
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+}).AddJwtBearer(token =>
+{
+    token.RequireHttpsMetadata = false;
+    token.SaveToken = true;
+    token.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(secret),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
+
+builder.Services.Configure<AuthSettings>(builder.Configuration.GetSection("AuthSettings"));
+builder.Services.Configure<SendGridSettings>(builder.Configuration.GetSection("SendGridSettings"));
+
+builder.Services.AddTransient<IEmailService, EmailService>();
+
+builder.Services.AddControllers();
+
 var app = builder.Build();
 
 app.UseAuthentication();
@@ -52,32 +89,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseStaticFiles();
+
 app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", (ILogger<Program> logger) =>
-{
-    logger.LogDebug("Executing YAS `/weatherforecast`");
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+ 
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
