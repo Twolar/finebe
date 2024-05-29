@@ -18,18 +18,18 @@ namespace finebe.webapi.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IOptions<JwtSettings> _jwtSettings;
+    private readonly IConfiguration _configuration;
     private readonly IOptions<AuthSettings> _authSettings;
     private readonly IEmailService _emailService;
 
     public AuthController(
         UserManager<ApplicationUser> userManager,
-        IOptions<JwtSettings> jwtSettings,
+        IConfiguration configuration,
         IOptions<AuthSettings> authSettings,
         IEmailService emailService)
     {
         _userManager = userManager;
-        _jwtSettings = jwtSettings;
+        _configuration = configuration;
         _authSettings = authSettings;
         _emailService = emailService;
     }
@@ -50,7 +50,12 @@ public class AuthController : ControllerBase
             new(ClaimTypes.NameIdentifier, user.Id),
         };
 
-        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Value.Secret));
+        var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET");
+        if (string.IsNullOrEmpty(secretKey))
+        {
+            throw new InvalidOperationException("JWT secret key is not set in the environment variables.");
+        }
+        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
         var token = new JwtSecurityToken(
             expires: DateTime.Now.AddHours(3),

@@ -1,4 +1,5 @@
 using System.Text;
+using DotNetEnv;
 using finebe.core.services.Messaging;
 using finebe.entities.Identity;
 using finebe.entities.Settings;
@@ -11,6 +12,9 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Load environment variables from .env file
+Env.Load();
 
 // Add services to the container.
 var logger = new LoggerConfiguration()
@@ -49,7 +53,14 @@ builder.Services.AddAuthorization();
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 builder.Services.Configure<JwtSettings>(jwtSettings);
 
-var secret = Encoding.ASCII.GetBytes(jwtSettings.Get<JwtSettings>().Secret);
+// Retrieve the JWT secret from the environment variable
+var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET");
+if (string.IsNullOrEmpty(secretKey))
+{
+    throw new InvalidOperationException("JWT secret key is not set in the environment variables.");
+}
+
+var secret = Encoding.ASCII.GetBytes(secretKey);
 
 // Adding authentication services
 builder.Services.AddAuthentication(options =>
