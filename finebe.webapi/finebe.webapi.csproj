@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\finebe.infrastructure.persistence\finebe.infrastructure.persistence.csproj" />
-    <ProjectReference Include="..\finebe.core.services\finebe.core.services.csproj" />
     <ProjectReference Include="..\finebe.infrastructure\finebe.infrastructure.csproj" />
   </ItemGroup>
 
