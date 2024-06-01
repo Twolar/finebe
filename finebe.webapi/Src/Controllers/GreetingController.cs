@@ -23,15 +23,13 @@ public class GreetingController : ControllerBase
     {
         try
         {
-            
-            throw new NotImplementedException("wowa");
-
+            var user = await _userManager.GetUserAsync(User);
+            return Ok($"Hello .Net Devs! I'm {user.UserName}");
         }
-        catch (System.Exception ex)
+        catch (System.Exception)
         {
-            throw new Exception ("test 123", ex);
+            throw;
         }
-        var user = await _userManager.GetUserAsync(User);
-        return Ok($"Hello .Net Devs! I'm {user.UserName}");
+
     }
 }

@@ -37,93 +37,124 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
-        var user = await _userManager.FindByEmailAsync(model.Email);
-        if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
+        try
         {
-            return Unauthorized();
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
+            {
+                return Unauthorized();
+            }
+
+            var authClaims = new List<Claim>
+            {
+                new(ClaimTypes.Name, user.UserName),
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new(ClaimTypes.NameIdentifier, user.Id),
+            };
+
+            var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET");
+            if (string.IsNullOrEmpty(secretKey))
+            {
+                throw new InvalidOperationException("JWT secret key is not set in the environment variables.");
+            }
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+
+            var token = new JwtSecurityToken(
+                expires: DateTime.Now.AddHours(3),
+                claims: authClaims,
+                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+            );
+
+            return Ok(new
+            {
+                token = new JwtSecurityTokenHandler().WriteToken(token),
+                expiration = token.ValidTo
+            });
         }
-
-        var authClaims = new List<Claim>
+        catch (System.Exception)
         {
-            new(ClaimTypes.Name, user.UserName),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(ClaimTypes.NameIdentifier, user.Id),
-        };
 
-        var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET");
-        if (string.IsNullOrEmpty(secretKey))
-        {
-            throw new InvalidOperationException("JWT secret key is not set in the environment variables.");
+            throw;
         }
-        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
-
-        var token = new JwtSecurityToken(
-            expires: DateTime.Now.AddHours(3),
-            claims: authClaims,
-            signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-        );
-    
-
-        return Ok(new
-        {
-            token = new JwtSecurityTokenHandler().WriteToken(token),
-            expiration = token.ValidTo
-        });
     }
 
     [HttpPost("request-password-reset")]
     public async Task<IActionResult> RequestPasswordReset([FromBody] ResetPasswordRequestModel model)
     {
-        var user = await _userManager.FindByEmailAsync(model.Email);
-        if (user == null)
+        try
         {
-            // User doesn't exist, return a generic response to avoid enumeration attacks
-            return Ok("If an account matches that email, a password reset email has been sent.");
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                // User doesn't exist, return a generic response to avoid enumeration attacks
+                return Ok("If an account matches that email, a password reset email has been sent.");
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var resetLink = $"{_authSettings.Value.ResetPasswordUrl}/{token}"; var message = $"To reset your password, please click on this link {resetLink}";
+
+            await _emailService.SendEmailAsync(model.Email, "Reset Password", message);
+
+            return Ok("Password reset email has been sent.");
         }
+        catch (System.Exception)
+        {
 
-        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-        var resetLink = $"{_authSettings.Value.ResetPasswordUrl}/{token}"; var message = $"To reset your password, please click on this link {resetLink}";
-
-        await _emailService.SendEmailAsync(model.Email, "Reset Password", message);
-
-        return Ok("Password reset email has been sent.");
+            throw;
+        }
     }
 
     [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+        try
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-        var user = await _userManager.FindByEmailAsync(model.Email);
-        if (user == null)
-            return BadRequest("Invalid token or email.");
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+                return BadRequest("Invalid token or email.");
 
-        var resetPassResult = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
-        if (!resetPassResult.Succeeded)
-            return BadRequest(resetPassResult.Errors);
+            var resetPassResult = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+            if (!resetPassResult.Succeeded)
+                return BadRequest(resetPassResult.Errors);
 
-        return Ok("Password has been successfully reset.");
+            return Ok("Password has been successfully reset.");
+        }
+        catch (System.Exception)
+        {
+
+            throw;
+        }
     }
 
     [HttpPost("validate-reset-token")]
     public async Task<IActionResult> ValidateResetToken(ValidateResetTokenModel model)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+        try
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-        var user = await _userManager.FindByEmailAsync(model.Email);
-        if (user == null)
-            return BadRequest("Invalid token or email.");
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+                return BadRequest("Invalid token or email.");
 
-        var validToken = await _userManager.VerifyUserTokenAsync(user,
-                            _userManager.Options.Tokens.PasswordResetTokenProvider,
-                            "ResetPassword", model.Token);
+            var validToken = await _userManager.VerifyUserTokenAsync(user,
+                                _userManager.Options.Tokens.PasswordResetTokenProvider,
+                                "ResetPassword", model.Token);
 
-        if (!validToken)
-            return BadRequest("Invalid token.");
+            if (!validToken)
+                return BadRequest("Invalid token.");
 
-        return Ok("Token is valid.");
+            return Ok("Token is valid.");
+        }
+        catch (System.Exception)
+        {
+
+            throw;
+        }
     }
 }
