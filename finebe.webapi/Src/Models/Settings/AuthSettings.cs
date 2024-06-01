@@ -1,4 +1,4 @@
-﻿namespace finebe.entities.Settings;
+﻿namespace finebe.webapi.Src.Models.Settings;
 
 public class AuthSettings
 {

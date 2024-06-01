@@ -1,17 +1,17 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using finebe.entities.Identity;
-using finebe.entities.Login;
-using finebe.entities.ResetPassword;
-using finebe.entities.Settings;
-using finebe.infrastructure.Messaging;
+using finebe.webapi.Src.Interfaces;
+using finebe.webapi.Src.Models.Identity;
+using finebe.webapi.Src.Models.Login;
+using finebe.webapi.Src.Models.ResetPassword;
+using finebe.webapi.Src.Models.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace finebe.webapi.Controllers;
+namespace finebe.webapi.Src.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

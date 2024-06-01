@@ -1,9 +1,10 @@
 using System.Text;
 using DotNetEnv;
-using finebe.entities.Identity;
-using finebe.entities.Settings;
-using finebe.infrastructure.Messaging;
-using finebe.infrastructure.persistence;
+using finebe.webapi.Src.Interfaces;
+using finebe.webapi.Src.Models.Identity;
+using finebe.webapi.Src.Models.Settings;
+using finebe.webapi.Src.Persistence;
+using finebe.webapi.Src.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace finebe.entities.Register;
+namespace finebe.webapi.Src.Models.Register;
 
 public class RegisterModel
 {

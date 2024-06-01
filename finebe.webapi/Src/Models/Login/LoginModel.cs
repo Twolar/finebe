@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace finebe.entities.Login;
+namespace finebe.webapi.Src.Models.Login;
 
 public class LoginModel
 {

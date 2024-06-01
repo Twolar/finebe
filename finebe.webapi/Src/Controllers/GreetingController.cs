@@ -1,9 +1,9 @@
-﻿using finebe.entities.Identity;
+﻿using finebe.webapi.Src.Models.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace finebe.webapi.Controllers;
+namespace finebe.webapi.Src.Controllers;
 
 [ApiController]
 [Route("[controller]")]

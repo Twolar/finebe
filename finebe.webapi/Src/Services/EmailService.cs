@@ -1,14 +1,10 @@
-﻿using finebe.entities.Settings;
+﻿using finebe.webapi.Src.Interfaces;
+using finebe.webapi.Src.Models.Settings;
 using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
-namespace finebe.infrastructure.Messaging;
-
-public interface IEmailService
-{
-    Task SendEmailAsync(string email, string subject, string message);
-}
+namespace finebe.webapi.Src.Services;
 
 public class EmailService : IEmailService
 {

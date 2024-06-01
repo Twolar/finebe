@@ -1,4 +1,4 @@
-﻿namespace finebe.entities.ResetPassword;
+﻿namespace finebe.webapi.Src.Models.ResetPassword;
 
 public class ResetPasswordRequestModel
 {

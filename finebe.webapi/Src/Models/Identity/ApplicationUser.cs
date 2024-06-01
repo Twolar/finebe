@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace finebe.entities.Identity;
+namespace finebe.webapi.Src.Models.Identity;
 
 public class ApplicationUser : IdentityUser
 {

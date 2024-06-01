@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace finebe.entities.ResetPassword;
+namespace finebe.webapi.Src.Models.ResetPassword;
 
 public class ResetPasswordModel
 {
