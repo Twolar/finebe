@@ -20,6 +20,7 @@ public class GreetingController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetGreeting()
     {
+        throw new NotImplementedException("wowa");
         var user = await _userManager.GetUserAsync(User);
         return Ok($"Hello .Net Devs! I'm {user.UserName}");
     }

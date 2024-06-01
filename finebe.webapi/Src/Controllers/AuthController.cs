@@ -62,6 +62,7 @@ public class AuthController : ControllerBase
             claims: authClaims,
             signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
         );
+        
 
         return Ok(new
         {

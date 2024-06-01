@@ -1,6 +1,7 @@
 using System.Text;
 using DotNetEnv;
 using finebe.webapi.Src.Interfaces;
+using finebe.webapi.Src.Middleware;
 using finebe.webapi.Src.Models.Identity;
 using finebe.webapi.Src.Models.Settings;
 using finebe.webapi.Src.Persistence;
@@ -89,6 +90,8 @@ builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddControllers();
 
 var app = builder.Build();
+
+app.UseMiddleware<ApiResponseMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();
