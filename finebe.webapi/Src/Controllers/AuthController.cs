@@ -18,20 +18,17 @@ namespace finebe.webapi.Src.Controllers;
 public class AuthController : ControllerBase
 {
     // TODO TLB: Refresh tokens?
-    
+
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IConfiguration _configuration;
     private readonly IOptions<AuthSettings> _authSettings;
     private readonly IEmailService _emailService;
 
     public AuthController(
         UserManager<ApplicationUser> userManager,
-        IConfiguration configuration,
         IOptions<AuthSettings> authSettings,
         IEmailService emailService)
     {
         _userManager = userManager;
-        _configuration = configuration;
         _authSettings = authSettings;
         _emailService = emailService;
     }
