@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace finebe.webapi.Src.Controllers;
 
-[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class TripsController : ControllerBase
@@ -19,6 +18,7 @@ public class TripsController : ControllerBase
         _authenticatedUserService = authenticatedUserService ?? throw new ArgumentNullException(nameof(authenticatedUserService));
     }
 
+    [Authorize]
     [HttpPost("create")]
     public async Task<IActionResult> Create(TripModel model)
     {
