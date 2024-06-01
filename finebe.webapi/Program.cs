@@ -32,6 +32,8 @@ builder.Logging.AddSerilog(logger);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddTransient<IAuthenticatedUserService, AuthenticatedUserService>();
+
 // Add SQLite database context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("ApplicationConnectionString")));
@@ -86,11 +88,6 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-app.UseMiddleware<ErrorHandlerMiddleware>();
-
-app.UseAuthentication();
-app.UseAuthorization();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -98,10 +95,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseHttpsRedirection();
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseStaticFiles();
 
-app.UseHttpsRedirection();
- 
 app.MapControllers();
 
 app.Run();

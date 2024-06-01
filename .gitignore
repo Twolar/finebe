@@ -402,3 +402,4 @@ FodyWeavers.xsd
 *.db-wal
 .vscode/settings.json
 *.env
+.DS_Store

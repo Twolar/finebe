@@ -49,6 +49,7 @@ public class AuthController : ControllerBase
                 new(ClaimTypes.Name, user.UserName),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new(ClaimTypes.NameIdentifier, user.Id),
+                
             };
 
             var claimsIdentity = new ClaimsIdentity(authClaims, "Bearer");

@@ -11,8 +11,8 @@ using finebe.webapi.Src.Persistence;
 namespace finebe.webapi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240601092326_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240601123629_AddTrips")]
+    partial class AddTrips
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -216,6 +216,38 @@ namespace finebe.webapi.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("finebe.webapi.TripModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("LastModifiedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("LastModifiedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Trips");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
