@@ -52,6 +52,8 @@ public class AuthController : ControllerBase
                 new(ClaimTypes.NameIdentifier, user.Id),
             };
 
+            var claimsIdentity = new ClaimsIdentity(authClaims, "Bearer");
+
             var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET");
             if (string.IsNullOrEmpty(secretKey))
             {
@@ -59,22 +61,27 @@ public class AuthController : ControllerBase
             }
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
-            var token = new JwtSecurityToken(
-                expires: DateTime.Now.AddHours(3),
-                claims: authClaims,
-                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-            );
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = claimsIdentity,
+                Expires = DateTime.Now.AddHours(3),
+                SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+            };
+
+            var token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
 
             return Ok(new
             {
-                token = new JwtSecurityTokenHandler().WriteToken(token),
-                expiration = token.ValidTo
+                token = tokenHandler.WriteToken(token),
+                expiration = token.ValidTo,
             });
         }
-        catch (System.Exception)
+        catch (Exception ex)
         {
-
-            throw;
+            // Log the exception (consider using a logging framework)
+            return StatusCode(500, "Internal server error");
         }
     }
 
