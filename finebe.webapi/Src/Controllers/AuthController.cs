@@ -17,8 +17,8 @@ namespace finebe.webapi.Src.Controllers;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-
     // TODO TLB: Refresh tokens?
+    
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IConfiguration _configuration;
     private readonly IOptions<AuthSettings> _authSettings;
