@@ -1,5 +1,6 @@
 using System.Text;
 using DotNetEnv;
+using finebe.webapi;
 using finebe.webapi.Src.Interfaces;
 using finebe.webapi.Src.Middleware;
 using finebe.webapi.Src.Models.Identity;
@@ -55,14 +56,8 @@ var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 builder.Services.Configure<JwtSettings>(jwtSettings);
 
 // Retrieve the JWT secret from the environment variable
-var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET");
-if (string.IsNullOrEmpty(secretKey))
-{
-    throw new InvalidOperationException("JWT secret key is not set in the environment variables.");
-}
-
+var secretKey = EnvVariableHelper.GetByKey("JWT_SECRET");
 var secret = Encoding.ASCII.GetBytes(secretKey);
-
 // Adding authentication services
 builder.Services.AddAuthentication(options =>
 {

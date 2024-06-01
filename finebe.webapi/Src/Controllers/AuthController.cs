@@ -53,11 +53,7 @@ public class AuthController : ControllerBase
 
             var claimsIdentity = new ClaimsIdentity(authClaims, "Bearer");
 
-            var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET");
-            if (string.IsNullOrEmpty(secretKey))
-            {
-                throw new InvalidOperationException("JWT secret key is not set in the environment variables.");
-            }
+            var secretKey = EnvVariableHelper.GetByKey("JWT_SECRET");
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
             var tokenHandler = new JwtSecurityTokenHandler();
