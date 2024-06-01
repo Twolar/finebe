@@ -91,7 +91,7 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-app.UseMiddleware<ApiResponseMiddleware>();
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

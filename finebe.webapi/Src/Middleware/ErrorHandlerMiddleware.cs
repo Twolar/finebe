@@ -5,14 +5,15 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 
 namespace finebe.webapi.Src.Middleware
 {
-    public class ApiResponseMiddleware
+    public class ErrorHandlerMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public ApiResponseMiddleware(RequestDelegate next)
+        public ErrorHandlerMiddleware(RequestDelegate next)
         {
             _next = next;
         }
@@ -60,10 +61,20 @@ namespace finebe.webapi.Src.Middleware
                             message = "Success";
                         }
 
+                        object responseData;
+                        try
+                        {
+                            responseData = JsonSerializer.Deserialize<object>(body);
+                        }
+                        catch
+                        {
+                            responseData = body;
+                        }
+
                         // Wrap the response in ApiResponse
                         var apiResponse = context.Response.StatusCode >= 200 && context.Response.StatusCode < 300
-                            ? ApiResponse<string>.Success(body, message)
-                            : ApiResponse<string>.Fail(message);
+                            ? ApiResponse<object>.Success(responseData, message)
+                            : ApiResponse<object>.Fail(message);
 
                         // Serialize the ApiResponse
                         var jsonResponse = JsonSerializer.Serialize(apiResponse);
@@ -82,7 +93,8 @@ namespace finebe.webapi.Src.Middleware
                     // Handle exceptions by wrapping them in ApiResponse
                     if (!context.Response.HasStarted)
                     {
-                        var apiResponse = ApiResponse<string>.Fail("Internal Server Error");
+                        var errorMessages = BuildErrorMessages(ex);
+                        var apiResponse = ApiResponse<string>.Fail(errorMessages);
                         var jsonResponse = JsonSerializer.Serialize(apiResponse);
 
                         // Ensure the response is in a correct state
@@ -110,6 +122,23 @@ namespace finebe.webapi.Src.Middleware
                     }
                 }
             }
+        }
+
+        private List<string> BuildErrorMessages(Exception ex)
+        {
+            var errorMessages = new List<string>
+            {
+                $"{ex.GetType().Name}: {ex.Message}"
+            };
+
+            var innerException = ex.InnerException;
+            while (innerException != null)
+            {
+                errorMessages.Add($"{innerException.GetType().Name}: {innerException.Message}");
+                innerException = innerException.InnerException;
+            }
+
+            return errorMessages;
         }
     }
 }
