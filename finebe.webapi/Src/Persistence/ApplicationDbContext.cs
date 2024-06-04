@@ -8,7 +8,7 @@ namespace finebe.webapi.Src.Persistence;
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
     private readonly IAuthenticatedUserService _authenticatedUser;
-    
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IAuthenticatedUserService authenticatedUserService)
     : base(options)
     {
@@ -19,20 +19,42 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        var currentUserId = Guid.Parse(_authenticatedUser.Uid); // Assumes GUID is used for user IDs
 
-        foreach (var entry in ChangeTracker.Entries<BaseEntity>())
+        if (!string.IsNullOrEmpty(_authenticatedUser.Uid))
         {
-            if (entry.State == EntityState.Added)
+            var currentUserId = Guid.Parse(_authenticatedUser.Uid); // Assumes GUID is used for user IDs
+
+            foreach (var entry in ChangeTracker.Entries<BaseEntity>())
             {
-                entry.Entity.CreatedAt = DateTime.Now;
-                entry.Entity.CreatedBy = currentUserId;
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedAt = DateTime.Now;
+                    entry.Entity.CreatedBy = currentUserId;
+                }
+
+                if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.LastModifiedAt = DateTime.Now;
+                    entry.Entity.LastModifiedBy = currentUserId;
+                }
             }
 
-            if (entry.State == EntityState.Modified)
+            return await base.SaveChangesAsync(cancellationToken);
+
+        }
+        else 
+        {
+            foreach (var entry in ChangeTracker.Entries<BaseEntity>())
             {
-                entry.Entity.LastModifiedAt = DateTime.Now;
-                entry.Entity.LastModifiedBy = currentUserId;
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedAt = DateTime.Now;
+                }
+
+                if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.LastModifiedAt = DateTime.Now;
+                }
             }
         }
 

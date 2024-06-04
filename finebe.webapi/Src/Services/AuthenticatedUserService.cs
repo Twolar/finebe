@@ -8,6 +8,7 @@ public class AuthenticatedUserService : IAuthenticatedUserService
     public AuthenticatedUserService(IHttpContextAccessor httpContextAccessor)
     {
         Uid = httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+        UUsername = httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Name);
     }
 
     public string Uid { get; }
