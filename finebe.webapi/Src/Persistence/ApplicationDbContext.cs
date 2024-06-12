@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace finebe.webapi.Src.Persistence;
 
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
     private readonly IAuthenticatedUserService _authenticatedUser;
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IAuthenticatedUserService authenticatedUserService)
-    : base(options)
+        : base(options)
     {
         _authenticatedUser = authenticatedUserService;
     }
@@ -34,7 +34,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         var hasher = new PasswordHasher<ApplicationUser>();
         modelBuilder.Entity<ApplicationUser>().HasData(new ApplicationUser
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = new Guid("3b1af8e0-eb6b-4b4e-8d2f-e95aa5347cd2"),
             UserName = "admin@domain.com",
             NormalizedUserName = "ADMIN",
             Email = "admin@domain.com",
@@ -66,9 +66,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             }
 
             return await base.SaveChangesAsync(cancellationToken);
-
         }
-        else 
+        else
         {
             foreach (var entry in ChangeTracker.Entries<BaseEntity>())
             {

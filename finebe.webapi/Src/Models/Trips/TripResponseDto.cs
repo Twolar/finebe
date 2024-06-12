@@ -8,5 +8,5 @@ public class TripResponseDto : BaseEntity
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
 
-    public string ApplicationUserId { get; set; }
+    public Guid ApplicationUserId { get; set; }
 }

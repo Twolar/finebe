@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace finebe.webapi.Src.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class GreetingController : ControllerBase

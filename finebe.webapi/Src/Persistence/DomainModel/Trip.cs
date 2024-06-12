@@ -9,7 +9,7 @@ public class Trip : BaseEntity
     public DateTime EndDate { get; set; }
 
     // Foreign key to ApplicationUser
-    public string ApplicationUserId { get; set; }
+    public Guid ApplicationUserId { get; set; }
 
     // Navigation property
     [JsonIgnore]

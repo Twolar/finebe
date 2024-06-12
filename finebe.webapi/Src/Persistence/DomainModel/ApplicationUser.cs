@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace finebe.webapi.Src.Persistence.DomainModel;
 
-public class ApplicationUser : IdentityUser
+public class ApplicationUser : IdentityUser<Guid>
 {
     public string Name { get; set; }
     public string Avatar { get; set; }

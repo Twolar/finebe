@@ -13,6 +13,9 @@ using Serilog;
 using Microsoft.OpenApi.Models;
 using finebe.webapi.Src.Persistence.DomainModel;
 using finebe.webapi.Src.Helpers;
+using finebe.webapi.Src.Filters;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,7 +73,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("ApplicationConnectionString")));
 
 // Adding Identity services
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
@@ -116,7 +119,17 @@ builder.Services.Configure<SendGridSettings>(builder.Configuration.GetSection("S
 
 builder.Services.AddTransient<IEmailService, EmailService>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<CustomResultFilter>();
+    options.Filters.Add(new CustomExceptionFilter(builder.Environment));
+})
+.AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});;
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 

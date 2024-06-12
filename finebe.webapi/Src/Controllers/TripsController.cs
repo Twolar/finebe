@@ -32,7 +32,7 @@ namespace finebe.webapi.Src.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById(Guid id)
         {
             var trip = await _context.Trips.FindAsync(id);
             if (trip == null)
