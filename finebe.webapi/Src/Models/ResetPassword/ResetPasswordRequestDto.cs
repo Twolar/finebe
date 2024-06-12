@@ -2,7 +2,7 @@
 
 namespace finebe.webapi.Src.Models.ResetPassword;
 
-public class ResetPasswordModel
+public class ResetPasswordRequestDto
 {
     [Required]
     [EmailAddress]

@@ -1,46 +1,69 @@
-﻿using finebe.webapi.Src.Interfaces;
+﻿using AutoMapper;
+using finebe.webapi.Src.Interfaces;
+using finebe.webapi.Src.Models.Trips;
 using finebe.webapi.Src.Persistence;
-using Microsoft.AspNetCore.Authorization;
+using finebe.webapi.Src.Persistence.DomainModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-namespace finebe.webapi.Src.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-public class TripsController : ControllerBase
+namespace finebe.webapi.Src.Controllers
 {
-    private readonly ApplicationDbContext _context;
-    private readonly IAuthenticatedUserService _authenticatedUserService;
-
-    public TripsController(ApplicationDbContext context, IAuthenticatedUserService authenticatedUserService)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class TripsController : ControllerBase
     {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
-        _authenticatedUserService = authenticatedUserService ?? throw new ArgumentNullException(nameof(authenticatedUserService));
-    }
+        private readonly ApplicationDbContext _context;
+        private readonly IAuthenticatedUserService _authenticatedUserService;
+        private readonly IMapper _mapper;
 
-    [Authorize]
-    [HttpPost("create")]
-    public async Task<IActionResult> Create(TripModel model)
-    {
-        try
+        public TripsController(ApplicationDbContext context, IAuthenticatedUserService authenticatedUserService, IMapper mapper)
         {
-            if (ModelState.IsValid)
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _authenticatedUserService = authenticatedUserService ?? throw new ArgumentNullException(nameof(authenticatedUserService));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        }
+
+        [HttpGet()]
+        public async Task<IActionResult> GetTrips()
+        {
+            var trips = await _context.Trips.ToListAsync();
+            var tripResponseDtos = _mapper.Map<List<TripResponseDto>>(trips);
+            return Ok(tripResponseDtos);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var trip = await _context.Trips.FindAsync(id);
+            if (trip == null)
             {
-                // Set the current user's ID
-                var currentUserId = Guid.Parse(_authenticatedUserService.Uid);
-
-                _context.Trips.Add(model);
-                await _context.SaveChangesAsync();
-
-                return Ok("Created");
+                return NotFound();
             }
 
-            return BadRequest(ModelState);
+            var tripResponseDto = _mapper.Map<TripResponseDto>(trip);
+            return Ok(tripResponseDto);
         }
-        catch (System.Exception)
-        {
 
-            throw;
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create(TripRequestDto model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var trip = _mapper.Map<Trip>(model);
+                    _context.Trips.Add(trip);
+                    await _context.SaveChangesAsync();
+
+                    return Ok("Created");
+                }
+
+                return BadRequest(ModelState);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
         }
     }
 }

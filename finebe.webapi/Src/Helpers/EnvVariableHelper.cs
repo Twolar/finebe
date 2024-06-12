@@ -1,4 +1,4 @@
-﻿namespace finebe.webapi;
+﻿namespace finebe.webapi.Src.Helpers;
 
 public static class EnvVariableHelper
 {

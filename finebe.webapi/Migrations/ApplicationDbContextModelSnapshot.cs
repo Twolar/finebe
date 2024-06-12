@@ -145,7 +145,7 @@ namespace finebe.webapi.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("finebe.webapi.Src.Models.Identity.ApplicationUser", b =>
+            modelBuilder.Entity("finebe.webapi.Src.Persistence.DomainModel.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -213,18 +213,40 @@ namespace finebe.webapi.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "774aa955-1c1f-4077-bc91-2b0448f81733",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "ed29b432-7f7b-46b6-9271-3222d71b96bb",
+                            Email = "admin@domain.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            Name = "Default Admin",
+                            NormalizedEmail = "ADMIN@DOMAIN.COM",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAIAAYagAAAAEO3nN0CcoC+wVKuPtMfGYyETkg3+SagSwrRWxJ1iFwKYyl3BGcZJi7mPiS3VuV+/zQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "",
+                            TwoFactorEnabled = false,
+                            UserName = "admin@domain.com"
+                        });
                 });
 
-            modelBuilder.Entity("finebe.webapi.TripModel", b =>
+            modelBuilder.Entity("finebe.webapi.Src.Persistence.DomainModel.Trip", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("CreatedBy")
+                    b.Property<string>("CreatedBy")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("EndDate")
@@ -233,7 +255,7 @@ namespace finebe.webapi.Migrations
                     b.Property<DateTime>("LastModifiedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("LastModifiedBy")
+                    b.Property<string>("LastModifiedBy")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Location")
@@ -243,6 +265,8 @@ namespace finebe.webapi.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Trips");
                 });
@@ -258,7 +282,7 @@ namespace finebe.webapi.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("finebe.webapi.Src.Models.Identity.ApplicationUser", null)
+                    b.HasOne("finebe.webapi.Src.Persistence.DomainModel.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -267,7 +291,7 @@ namespace finebe.webapi.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("finebe.webapi.Src.Models.Identity.ApplicationUser", null)
+                    b.HasOne("finebe.webapi.Src.Persistence.DomainModel.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -282,7 +306,7 @@ namespace finebe.webapi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("finebe.webapi.Src.Models.Identity.ApplicationUser", null)
+                    b.HasOne("finebe.webapi.Src.Persistence.DomainModel.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -291,11 +315,25 @@ namespace finebe.webapi.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("finebe.webapi.Src.Models.Identity.ApplicationUser", null)
+                    b.HasOne("finebe.webapi.Src.Persistence.DomainModel.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("finebe.webapi.Src.Persistence.DomainModel.Trip", b =>
+                {
+                    b.HasOne("finebe.webapi.Src.Persistence.DomainModel.ApplicationUser", "ApplicationUser")
+                        .WithMany("Trips")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.Navigation("ApplicationUser");
+                });
+
+            modelBuilder.Entity("finebe.webapi.Src.Persistence.DomainModel.ApplicationUser", b =>
+                {
+                    b.Navigation("Trips");
                 });
 #pragma warning restore 612, 618
         }

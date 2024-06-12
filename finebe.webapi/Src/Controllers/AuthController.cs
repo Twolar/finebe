@@ -1,11 +1,12 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using finebe.webapi.Src.Helpers;
 using finebe.webapi.Src.Interfaces;
-using finebe.webapi.Src.Models.Identity;
 using finebe.webapi.Src.Models.Login;
 using finebe.webapi.Src.Models.ResetPassword;
 using finebe.webapi.Src.Models.Settings;
+using finebe.webapi.Src.Persistence.DomainModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -34,7 +35,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginModel model)
+    public async Task<IActionResult> Login([FromBody] LoginRequestDto model)
     {
         try
         {
@@ -82,7 +83,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("request-password-reset")]
-    public async Task<IActionResult> RequestPasswordReset([FromBody] ResetPasswordRequestModel model)
+    public async Task<IActionResult> RequestPasswordReset([FromBody] ResetPasswordActionRequestDto model)
     {
         try
         {
@@ -109,7 +110,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("reset-password")]
-    public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
+    public async Task<IActionResult> ResetPassword(ResetPasswordRequestDto model)
     {
         try
         {
@@ -128,13 +129,12 @@ public class AuthController : ControllerBase
         }
         catch (System.Exception)
         {
-
             throw;
         }
     }
 
     [HttpPost("validate-reset-token")]
-    public async Task<IActionResult> ValidateResetToken(ValidateResetTokenModel model)
+    public async Task<IActionResult> ValidateResetToken(ValidateResetTokenRequestDto model)
     {
         try
         {

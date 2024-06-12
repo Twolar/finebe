@@ -2,7 +2,7 @@
 
 namespace finebe.webapi.Src.Models.Register;
 
-public class RegisterModel
+public class RegisterRequestDto
 {
     [Required]
     public string Name { get; set; }

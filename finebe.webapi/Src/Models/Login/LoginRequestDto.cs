@@ -2,7 +2,7 @@
 
 namespace finebe.webapi.Src.Models.Login;
 
-public class LoginModel
+public class LoginRequestDto
 {
     [Required]
     public string Email { get; set; }

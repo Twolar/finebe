@@ -1,5 +1,5 @@
-﻿using finebe.webapi.Src.Models.Identity;
-using finebe.webapi.Src.Models.Register;
+﻿using finebe.webapi.Src.Models.Register;
+using finebe.webapi.Src.Persistence.DomainModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +19,7 @@ public class AccountsController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterModel model)
+    public async Task<IActionResult> Register(RegisterRequestDto model)
     {
         try
         {

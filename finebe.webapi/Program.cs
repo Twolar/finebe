@@ -1,9 +1,7 @@
 using System.Text;
 using DotNetEnv;
-using finebe.webapi;
 using finebe.webapi.Src.Interfaces;
 using finebe.webapi.Src.Middleware;
-using finebe.webapi.Src.Models.Identity;
 using finebe.webapi.Src.Models.Settings;
 using finebe.webapi.Src.Persistence;
 using finebe.webapi.Src.Services;
@@ -12,13 +10,16 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using Microsoft.OpenApi.Models;
+using finebe.webapi.Src.Persistence.DomainModel;
+using finebe.webapi.Src.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Load environment variables from .env file
 Env.Load();
 
-// Add services to the container.
+// Configure Serilog
 var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
@@ -28,9 +29,39 @@ builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// Configure Swagger
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+
+    // Add JWT authentication to Swagger
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter 'Bearer' [space] and then your valid token in the text input below.\n\nExample: 'Bearer 12345abcdef'",
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
 
 builder.Services.AddTransient<IAuthenticatedUserService, AuthenticatedUserService>();
 
@@ -60,7 +91,8 @@ builder.Services.Configure<JwtSettings>(jwtSettings);
 // Retrieve the JWT secret from the environment variable
 var secretKey = EnvVariableHelper.GetByKey("JWT_SECRET");
 var secret = Encoding.ASCII.GetBytes(secretKey);
-// Adding authentication services
+
+// Adding JWT authentication
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -86,13 +118,21 @@ builder.Services.AddTransient<IEmailService, EmailService>();
 
 builder.Services.AddControllers();
 
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+else
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();

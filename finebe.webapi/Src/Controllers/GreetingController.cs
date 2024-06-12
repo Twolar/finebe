@@ -1,8 +1,7 @@
-﻿using finebe.webapi.Src.Models.Identity;
+﻿using finebe.webapi.Src.Persistence.DomainModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SQLitePCL;
 
 namespace finebe.webapi.Src.Controllers;
 
@@ -17,7 +16,6 @@ public class GreetingController : ControllerBase
         _userManager = userManager;
     }
 
-    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetGreeting()
     {

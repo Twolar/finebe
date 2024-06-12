@@ -1,5 +1,7 @@
-﻿using finebe.webapi.Src.Interfaces;
-using finebe.webapi.Src.Models.Identity;
+﻿using finebe.webapi.Src.Helpers;
+using finebe.webapi.Src.Interfaces;
+using finebe.webapi.Src.Persistence.DomainModel;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,27 +17,51 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         _authenticatedUser = authenticatedUserService;
     }
 
-    public DbSet<TripModel> Trips { get; set; }
+    public DbSet<Trip> Trips { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.ApplyConfiguration(new TripConfiguration());
+
+        SeedDatabase(modelBuilder);
+    }
+
+    private void SeedDatabase(ModelBuilder modelBuilder)
+    {
+        // Create user
+        var hasher = new PasswordHasher<ApplicationUser>();
+        modelBuilder.Entity<ApplicationUser>().HasData(new ApplicationUser
+        {
+            Id = Guid.NewGuid().ToString(),
+            UserName = "admin@domain.com",
+            NormalizedUserName = "ADMIN",
+            Email = "admin@domain.com",
+            NormalizedEmail = "ADMIN@DOMAIN.COM",
+            EmailConfirmed = true,
+            PasswordHash = hasher.HashPassword(null, EnvVariableHelper.GetByKey("DEFAULT_ADMIN_PASSWORD")),
+            SecurityStamp = string.Empty,
+            Name = "Default Admin"
+        });
+    }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-
-        if (!string.IsNullOrEmpty(_authenticatedUser.Uid))
+        if (!string.IsNullOrEmpty(_authenticatedUser.UUsername))
         {
-            var currentUserId = Guid.Parse(_authenticatedUser.Uid); // Assumes GUID is used for user IDs
-
             foreach (var entry in ChangeTracker.Entries<BaseEntity>())
             {
                 if (entry.State == EntityState.Added)
                 {
                     entry.Entity.CreatedAt = DateTime.Now;
-                    entry.Entity.CreatedBy = currentUserId;
+                    entry.Entity.CreatedBy = _authenticatedUser.UUsername;
                 }
 
                 if (entry.State == EntityState.Modified)
                 {
                     entry.Entity.LastModifiedAt = DateTime.Now;
-                    entry.Entity.LastModifiedBy = currentUserId;
+                    entry.Entity.LastModifiedBy = _authenticatedUser.UUsername;
                 }
             }
 
