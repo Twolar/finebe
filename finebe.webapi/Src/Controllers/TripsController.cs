@@ -26,6 +26,7 @@ namespace finebe.webapi.Src.Controllers
         [HttpGet()]
         public async Task<IActionResult> GetTrips()
         {
+            _authenticatedUserService.IsAuthenticated();
             var trips = await _context.Trips.ToListAsync();
             var tripResponseDtos = _mapper.Map<List<TripResponseDto>>(trips);
             return Ok(tripResponseDtos);

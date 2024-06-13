@@ -133,7 +133,7 @@ builder.Services.AddControllers(options =>
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-var app = builder.Build();
+var app = builder.Build(); // BUILD YO
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
