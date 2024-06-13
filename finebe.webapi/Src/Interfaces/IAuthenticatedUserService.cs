@@ -2,6 +2,7 @@
 
 public interface IAuthenticatedUserService
 {
-    string Uid { get; }
-    public string UUsername { get; }
+    Guid? Guid { get; }
+    public string Email { get; }
+    public bool IsAuthenticated();
 }

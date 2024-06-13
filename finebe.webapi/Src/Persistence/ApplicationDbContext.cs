@@ -48,20 +48,20 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        if (!string.IsNullOrEmpty(_authenticatedUser.UUsername))
+        if (!string.IsNullOrEmpty(_authenticatedUser.Email))
         {
             foreach (var entry in ChangeTracker.Entries<BaseEntity>())
             {
                 if (entry.State == EntityState.Added)
                 {
                     entry.Entity.CreatedAt = DateTime.Now;
-                    entry.Entity.CreatedBy = _authenticatedUser.UUsername;
+                    entry.Entity.CreatedBy = _authenticatedUser.Email;
                 }
 
                 if (entry.State == EntityState.Modified)
                 {
                     entry.Entity.LastModifiedAt = DateTime.Now;
-                    entry.Entity.LastModifiedBy = _authenticatedUser.UUsername;
+                    entry.Entity.LastModifiedBy = _authenticatedUser.Email;
                 }
             }
 
@@ -74,11 +74,13 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
                 if (entry.State == EntityState.Added)
                 {
                     entry.Entity.CreatedAt = DateTime.Now;
+                    entry.Entity.CreatedBy = "AnonymousUser";
                 }
 
                 if (entry.State == EntityState.Modified)
                 {
                     entry.Entity.LastModifiedAt = DateTime.Now;
+                    entry.Entity.LastModifiedBy = "AnonymousUser";
                 }
             }
         }
