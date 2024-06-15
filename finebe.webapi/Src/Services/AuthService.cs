@@ -107,10 +107,11 @@ namespace finebe.webapi.Src.Services
 
             var tokenHandler = new JwtSecurityTokenHandler();
 
+            var tokenExpiryHours = int.Parse(EnvVariableHelper.GetByKey("TOKEN_EXPIRY_HOURS"));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = claimsIdentity,
-                Expires = DateTime.Now.AddHours(3),
+                Expires = DateTime.Now.AddHours(tokenExpiryHours),
                 SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
             };
 
@@ -131,11 +132,12 @@ namespace finebe.webapi.Src.Services
 
         private async Task<RefreshToken> GenerateRefreshToken(ApplicationUser user)
         {
+            var tokenExpiryDays = int.Parse(EnvVariableHelper.GetByKey("REFRESH_TOKEN_EXPIRY_DAYS"));
             var refreshToken = new RefreshToken
             {
                 Token = Guid.NewGuid().ToString(),
                 UserId = user.Id,
-                Expiration = DateTime.Now.AddDays(7),
+                Expiration = DateTime.Now.AddDays(tokenExpiryDays),
                 IsRevoked = false
             };
 
