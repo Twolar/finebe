@@ -9,18 +9,23 @@ namespace finebe.webapi.Src.Persistence;
 
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
+    private readonly ILogger<ApplicationDbContext> _logger;
     private readonly IAuthenticatedUserService _authenticatedUser;
 
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IAuthenticatedUserService authenticatedUserService)
+    public ApplicationDbContext(ILogger<ApplicationDbContext> logger, DbContextOptions<ApplicationDbContext> options, IAuthenticatedUserService authenticatedUserService)
         : base(options)
     {
+        _logger = logger;
         _authenticatedUser = authenticatedUserService;
+
     }
 
     public DbSet<Trip> Trips { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        _logger.LogInformation("Init");
+
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfiguration(new TripConfiguration());
@@ -30,6 +35,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 
     private void SeedDatabase(ModelBuilder modelBuilder)
     {
+        _logger.LogInformation("Init");
+
         // Create user
         var hasher = new PasswordHasher<ApplicationUser>();
         modelBuilder.Entity<ApplicationUser>().HasData(new ApplicationUser
@@ -48,6 +55,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
+        _logger.LogInformation("Init");
+
         if (!string.IsNullOrEmpty(_authenticatedUser.Email))
         {
             foreach (var entry in ChangeTracker.Entries<BaseEntity>())

@@ -7,6 +7,7 @@ namespace finebe.webapi.Src.Helpers;
     {
         public MappingProfile()
         {
+            // Trips
             CreateMap<Trip, TripRequestDto>().ReverseMap();
             CreateMap<Trip, TripResponseDto>().ReverseMap();
         }

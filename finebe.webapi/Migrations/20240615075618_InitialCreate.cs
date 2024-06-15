@@ -170,7 +170,8 @@ namespace finebe.webapi.Migrations
                     LastModifiedBy = table.Column<string>(type: "TEXT", nullable: true),
                     LastModifiedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedBy = table.Column<string>(type: "TEXT", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -186,7 +187,7 @@ namespace finebe.webapi.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Avatar", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("3b1af8e0-eb6b-4b4e-8d2f-e95aa5347cd2"), 0, null, "8ccdbcb3-82df-4d1e-b55e-f85c8e474c79", "admin@domain.com", true, false, null, "Default Admin", "ADMIN@DOMAIN.COM", "ADMIN", "AQAAAAIAAYagAAAAEKFTas7WjOHjuOOzhUfX5vsGEK3jLs+OXM20sFjAbMTJVUmAURoYscgVAs/JxjY62g==", null, false, "", false, "admin@domain.com" });
+                values: new object[] { new Guid("3b1af8e0-eb6b-4b4e-8d2f-e95aa5347cd2"), 0, null, "b0fc2ef0-7502-4c74-835c-3f05dc6f17a6", "admin@domain.com", true, false, null, "Default Admin", "ADMIN@DOMAIN.COM", "ADMIN", "AQAAAAIAAYagAAAAEMcBknE39GtS0nqs0B/Sus5+r2eifH3m9+1gorXZWw8tfHIqn/O2YGmkKbv73yjuOg==", null, false, "", false, "admin@domain.com" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

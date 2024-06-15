@@ -16,6 +16,7 @@ using finebe.webapi.Src.Helpers;
 using finebe.webapi.Src.Filters;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using finebe.webapi.Src.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,11 @@ var logger = new LoggerConfiguration()
 
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
+
+builder.Services.AddTransient<IAuthenticatedUserService, AuthenticatedUserService>();
+builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddTransient<ITripService, TripService>();
+builder.Services.AddTransient<ITripRepository, TripRepository>();
 
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
@@ -65,8 +71,6 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
-
-builder.Services.AddTransient<IAuthenticatedUserService, AuthenticatedUserService>();
 
 // Add SQLite database context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -116,8 +120,6 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.Configure<AuthSettings>(builder.Configuration.GetSection("AuthSettings"));
 builder.Services.Configure<SendGridSettings>(builder.Configuration.GetSection("SendGridSettings"));
-
-builder.Services.AddTransient<IEmailService, EmailService>();
 
 builder.Services.AddControllers(options =>
 {

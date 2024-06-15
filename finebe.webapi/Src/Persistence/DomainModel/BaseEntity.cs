@@ -10,4 +10,5 @@ public class BaseEntity
     public DateTime LastModifiedAt { get; set; }
     public string CreatedBy { get; set;}
     public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public bool IsDeleted { get; set; } = false;
 }

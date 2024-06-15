@@ -11,7 +11,7 @@ using finebe.webapi.Src.Persistence;
 namespace finebe.webapi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240612224505_InitialCreate")]
+    [Migration("20240615075618_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -221,14 +221,14 @@ namespace finebe.webapi.Migrations
                         {
                             Id = new Guid("3b1af8e0-eb6b-4b4e-8d2f-e95aa5347cd2"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8ccdbcb3-82df-4d1e-b55e-f85c8e474c79",
+                            ConcurrencyStamp = "b0fc2ef0-7502-4c74-835c-3f05dc6f17a6",
                             Email = "admin@domain.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "Default Admin",
                             NormalizedEmail = "ADMIN@DOMAIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKFTas7WjOHjuOOzhUfX5vsGEK3jLs+OXM20sFjAbMTJVUmAURoYscgVAs/JxjY62g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMcBknE39GtS0nqs0B/Sus5+r2eifH3m9+1gorXZWw8tfHIqn/O2YGmkKbv73yjuOg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -253,6 +253,9 @@ namespace finebe.webapi.Migrations
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("LastModifiedAt")
                         .HasColumnType("TEXT");

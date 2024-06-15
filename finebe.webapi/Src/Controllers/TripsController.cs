@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using finebe.webapi.Src.Interfaces;
 using finebe.webapi.Src.Models.Trips;
-using finebe.webapi.Src.Persistence;
 using finebe.webapi.Src.Persistence.DomainModel;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace finebe.webapi.Src.Controllers
 {
@@ -12,22 +10,19 @@ namespace finebe.webapi.Src.Controllers
     [Route("api/[controller]")]
     public class TripsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-        private readonly IAuthenticatedUserService _authenticatedUserService;
+        private readonly ITripService _tripService;
         private readonly IMapper _mapper;
 
-        public TripsController(ApplicationDbContext context, IAuthenticatedUserService authenticatedUserService, IMapper mapper)
+        public TripsController(ITripService tripService, IMapper mapper)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-            _authenticatedUserService = authenticatedUserService ?? throw new ArgumentNullException(nameof(authenticatedUserService));
+            _tripService = tripService ?? throw new ArgumentNullException(nameof(tripService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpGet()]
         public async Task<IActionResult> GetTrips()
         {
-            _authenticatedUserService.IsAuthenticated();
-            var trips = await _context.Trips.ToListAsync();
+            var trips = await _tripService.GetAllTripsAsync();
             var tripResponseDtos = _mapper.Map<List<TripResponseDto>>(trips);
             return Ok(tripResponseDtos);
         }
@@ -35,7 +30,7 @@ namespace finebe.webapi.Src.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var trip = await _context.Trips.FindAsync(id);
+            var trip = await _tripService.GetTripByIdAsync(id);
             if (trip == null)
             {
                 return NotFound();
@@ -48,23 +43,46 @@ namespace finebe.webapi.Src.Controllers
         [HttpPost("Create")]
         public async Task<IActionResult> Create(TripRequestDto model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
-                {
-                    var trip = _mapper.Map<Trip>(model);
-                    _context.Trips.Add(trip);
-                    await _context.SaveChangesAsync();
+                var trip = _mapper.Map<Trip>(model);
+                var createdTrip = await _tripService.CreateTripAsync(trip);
 
-                    return Ok("Created");
-                }
-
-                return BadRequest(ModelState);
+                var tripResponseDto = _mapper.Map<TripResponseDto>(createdTrip);
+                return Ok(tripResponseDto);
             }
-            catch (System.Exception)
+
+            return BadRequest(ModelState);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, TripRequestDto model)
+        {
+            var trip = await _tripService.GetTripByIdAsync(id);
+            if (trip == null)
             {
-                throw;
+                return NotFound();
             }
+
+            _mapper.Map(model, trip);
+
+            var updatedTrip = await _tripService.UpdateTripAsync(trip);
+            var tripResponseDto = _mapper.Map<TripResponseDto>(updatedTrip);
+            return Ok(tripResponseDto);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var trip = await _tripService.GetTripByIdAsync(id);
+            if (trip == null)
+            {
+                return NotFound();
+            }
+
+            var deletedTrip = await _tripService.DeleteTripAsync(id);
+            var tripResponseDto = _mapper.Map<TripResponseDto>(deletedTrip);
+            return Ok(tripResponseDto);
         }
     }
 }
