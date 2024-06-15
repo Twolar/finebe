@@ -403,3 +403,4 @@ FodyWeavers.xsd
 .vscode/settings.json
 *.env
 .DS_Store
+*.session.sql

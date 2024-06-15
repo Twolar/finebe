@@ -18,7 +18,7 @@ public class AccountsController : ControllerBase
         _signInManager = signInManager;
     }
 
-    [HttpPost("register")]
+    [HttpPost("Register")]
     public async Task<IActionResult> Register(RegisterRequestDto model)
     {
         try
@@ -56,7 +56,7 @@ public class AccountsController : ControllerBase
         }
     }
 
-    [HttpPost("avatar")]
+    [HttpPost("UploadAvatar")]
     public async Task<IActionResult> UploadAvatar(IFormFile avatar)
     {
         try

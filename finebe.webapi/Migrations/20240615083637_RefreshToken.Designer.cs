@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using finebe.webapi.Src.Persistence;
 
@@ -10,9 +11,11 @@ using finebe.webapi.Src.Persistence;
 namespace finebe.webapi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240615083637_RefreshToken")]
+    partial class RefreshToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.5");
@@ -218,14 +221,14 @@ namespace finebe.webapi.Migrations
                         {
                             Id = new Guid("3b1af8e0-eb6b-4b4e-8d2f-e95aa5347cd2"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3338d8bf-167c-492b-9715-d24e159412b1",
+                            ConcurrencyStamp = "47b7a64b-2551-4245-9835-dce0b5b4612c",
                             Email = "admin@domain.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "Default Admin",
                             NormalizedEmail = "ADMIN@DOMAIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIGNf3jl+0GJQdwFIwr8pGbcKipkJN2Oy6+sObKcAfZCZeD6HMhJ1VmgN1vjZa8gog==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFVho9mosyIhER8NsSLmKCwtCuJTqC89aIDE3MnsqbOMmynuacei4XXwxBKfCu1Byg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -267,8 +270,6 @@ namespace finebe.webapi.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("RefreshTokens");
                 });
@@ -364,17 +365,6 @@ namespace finebe.webapi.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("finebe.webapi.Src.Persistence.DomainModel.RefreshToken", b =>
-                {
-                    b.HasOne("finebe.webapi.Src.Persistence.DomainModel.ApplicationUser", "ApplicationUser")
-                        .WithMany("RefreshTokens")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-                });
-
             modelBuilder.Entity("finebe.webapi.Src.Persistence.DomainModel.Trip", b =>
                 {
                     b.HasOne("finebe.webapi.Src.Persistence.DomainModel.ApplicationUser", "ApplicationUser")
@@ -388,8 +378,6 @@ namespace finebe.webapi.Migrations
 
             modelBuilder.Entity("finebe.webapi.Src.Persistence.DomainModel.ApplicationUser", b =>
                 {
-                    b.Navigation("RefreshTokens");
-
                     b.Navigation("Trips");
                 });
 #pragma warning restore 612, 618

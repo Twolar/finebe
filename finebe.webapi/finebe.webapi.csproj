@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <Folder Include="Src/Models/Domain/" />
+    <Folder Include="Src/Models/Generic/RefreshTokenRequestModel/" />
     <Folder Include="wwwroot/" />
   </ItemGroup>
 

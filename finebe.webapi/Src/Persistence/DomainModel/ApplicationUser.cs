@@ -11,4 +11,6 @@ public class ApplicationUser : IdentityUser<Guid>
     // Navigation property for the relationship
     [JsonIgnore]
     public ICollection<Trip> Trips { get; set; }
+     [JsonIgnore]
+    public ICollection<RefreshToken> RefreshTokens { get; set; }
 }

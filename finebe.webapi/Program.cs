@@ -36,6 +36,7 @@ builder.Services.AddTransient<IAuthenticatedUserService, AuthenticatedUserServic
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<ITripService, TripService>();
 builder.Services.AddTransient<ITripRepository, TripRepository>();
+builder.Services.AddTransient<IAuthService, AuthService>();
 
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
