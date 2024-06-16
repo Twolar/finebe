@@ -1,29 +1,51 @@
-import { Box, FormControl, FormLabel, Input, Button } from "@mui/material";
-import { useTheme } from "@emotion/react";
 import React, { useState } from "react";
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  Button
+} from "@mui/material";
+import { useTheme } from "@emotion/react";
 
 export default function RegisterForm() {
   const theme = useTheme();
 
-  // State variables to store form data
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // State variable to store form data
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    // Validate if passwords match
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
     // Handle form submission logic here (e.g., sending data to backend)
-    const formData = {
-      name: name,
-      email: email,
-      password: password,
-    };
     console.log(formData);
 
     // Reset form fields after submission if needed
-    setName("");
-    setEmail("");
-    setPassword("");
+    setFormData({
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    });
   };
 
   return (
@@ -32,7 +54,7 @@ export default function RegisterForm() {
       mx="auto"
       p={3}
       border="solid 1px #ccc"
-      borderRadius={8}
+      borderRadius={2}
       sx={{
         "& .Mui-focused": {
           color: `${theme.palette.secondary.main} !important`,
@@ -46,8 +68,9 @@ export default function RegisterForm() {
         <FormControl fullWidth margin="normal" required>
           <FormLabel>Name</FormLabel>
           <Input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
             placeholder="Write your name here"
           />
         </FormControl>
@@ -55,8 +78,9 @@ export default function RegisterForm() {
         <FormControl fullWidth margin="normal" required>
           <FormLabel>Email</FormLabel>
           <Input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
             type="email"
             placeholder="Your email address"
           />
@@ -65,10 +89,22 @@ export default function RegisterForm() {
         <FormControl fullWidth margin="normal" required>
           <FormLabel>Password</FormLabel>
           <Input
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
             type="password"
             placeholder="Your password"
+          />
+        </FormControl>
+
+        <FormControl fullWidth margin="normal" required>
+          <FormLabel>Confirm Password</FormLabel>
+          <Input
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            type="password"
+            placeholder="Confirm your password"
           />
         </FormControl>
 
@@ -78,9 +114,9 @@ export default function RegisterForm() {
           fullWidth
           sx={{
             mt: 3,
-            backgroundColor: theme.palette.primary.main,
+            backgroundColor: theme.palette.neutral.main,
             "&:hover": {
-              backgroundColor: theme.palette.primary.dark,
+              backgroundColor: theme.palette.secondary.main,
             },
           }}
         >
