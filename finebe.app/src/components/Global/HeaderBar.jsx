@@ -13,8 +13,14 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import { Link } from "react-router-dom";
+import { useTheme } from "@mui/material";
+import { tokens } from "../../theme";
+
+const appTitle = "Finebe";
 
 export default function HeaderBar({ pages, settings }) {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openDrawer, setOpenDrawer] = React.useState(false);
 
@@ -42,6 +48,18 @@ export default function HeaderBar({ pages, settings }) {
     }
     setOpenDrawer(open);
   };
+
+  const appTitleComponent = (
+    <Typography
+      className="baloo-bhaijaan-2-font"
+      variant="h6"
+      noWrap
+      component="div"
+      sx={{ flexGrow: 1 }}
+    >
+      {appTitle}
+    </Typography>
+  );
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -81,6 +99,14 @@ export default function HeaderBar({ pages, settings }) {
       onKeyDown={toggleDrawer(false)}
     >
       <List>
+      <ListItem
+        button
+        key={appTitle}
+        component={Link}
+        to="/"
+      >
+        {appTitleComponent}
+      </ListItem>
         {pages.map((page) => (
           <ListItem
             button
@@ -96,7 +122,11 @@ export default function HeaderBar({ pages, settings }) {
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box
+      sx={{
+        flexGrow: 1,
+      }}
+    >
       <AppBar position="static" enableColorOnDark={true}>
         <Toolbar>
           <IconButton
@@ -109,9 +139,7 @@ export default function HeaderBar({ pages, settings }) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            Finebe
-          </Typography>
+          {appTitleComponent}
           <Box sx={{ display: { md: "flex" } }}>
             <IconButton
               size="large"
@@ -127,7 +155,18 @@ export default function HeaderBar({ pages, settings }) {
           </Box>
         </Toolbar>
       </AppBar>
-      <Drawer anchor="left" open={openDrawer} onClose={toggleDrawer(false)}>
+
+      <Drawer
+        anchor="left"
+        open={openDrawer}
+        onClose={toggleDrawer(false)}
+        sx={{
+          "& .MuiPaper-root": {
+            backgroundColor: `${colors.primary[400]} !important`,
+            background: `${colors.primary[400]} !important`,
+          },
+        }}
+      >
         {sideMenu}
       </Drawer>
       {renderMenu}

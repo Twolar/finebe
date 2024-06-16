@@ -126,23 +126,44 @@ export const getDesignTokens = (mode) => {
   let theme = createTheme({
     palette: {
       mode: mode,
-      primary: {
-        main: colors.primary[500], // Adjust based on your color structure
-      },
-      secondary: {
-        main: colors.greenAccent[500], // Adjust based on your color structure
-      },
-      neutral: {
-        dark: colors.grey[700], // Adjust based on your color structure
-        main: colors.grey[500], // Adjust based on your color structure
-        light: colors.grey[100], // Adjust based on your color structure
-      },
-      background: {
-        default: mode === "dark" ? colors.primary[500] : "#303030", // Adjust based on your color structure
-      },
+      ...(mode === "dark"
+        ? {
+            // palette values for dark mode
+            primary: {
+              main: colors.primary[500],
+            },
+            secondary: {
+              main: colors.greenAccent[500],
+            },
+            neutral: {
+              dark: colors.grey[700],
+              main: colors.grey[500],
+              light: colors.grey[100],
+            },
+            background: {
+              default: colors.primary[500],
+            },
+          }
+        : {
+            // palette values for light mode
+            primary: {
+              main: colors.primary[100],
+            },
+            secondary: {
+              main: colors.greenAccent[500],
+            },
+            neutral: {
+              dark: colors.grey[700],
+              main: colors.grey[500],
+              light: colors.grey[100],
+            },
+            background: {
+              default: "#fcfcfc",
+            },
+          }),
     },
     menu: {
-      containerBackgroundColor: '#303030'
+      containerBackgroundColor: "#303030",
     },
     typography: {
       fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
@@ -192,7 +213,7 @@ export const useMode = () => {
 
   const colorMode = useMemo(
     () => ({
-      // The dark mode switch would invoke this method
+      // The dark mode switch would invoke th is method
       toggleColorMode: () => {
         setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
       },
