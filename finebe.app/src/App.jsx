@@ -7,7 +7,7 @@ import { ColorModeContext, useMode } from "./theme";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
-import HeaderBar from "./components/Global/HeaderBar";
+import HeaderBar from "./components/HeaderBar";
 
 function App() {
   const [theme, colorMode] = useMode();

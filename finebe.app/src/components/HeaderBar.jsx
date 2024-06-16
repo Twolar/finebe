@@ -14,7 +14,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material";
-import { tokens } from "../../theme";
+import { tokens } from "../theme";
 
 const appTitle = "Finebe";
 
