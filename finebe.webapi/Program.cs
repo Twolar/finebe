@@ -17,6 +17,7 @@ using finebe.webapi.Src.Filters;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using finebe.webapi.Src.Repositories;
+using finebe.webapi.Src.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,8 +27,11 @@ Env.Load();
 // Configure Serilog
 var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.WithCorrelationIdHeader(SettingsEnum.CorrelationIdHeaderKey)
     .Enrich.FromLogContext()
     .CreateLogger();
+
+builder.Services.AddHttpContextAccessor();
 
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);

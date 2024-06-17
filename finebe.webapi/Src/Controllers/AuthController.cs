@@ -3,8 +3,6 @@ using finebe.webapi.Src.Models.Generic;
 using finebe.webapi.Src.Models.Login;
 using finebe.webapi.Src.Models.ResetPassword;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
 namespace finebe.webapi.Src.Controllers
 {
@@ -12,23 +10,31 @@ namespace finebe.webapi.Src.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
+        private readonly ILogger<AuthController> _logger;
         private readonly IAuthService _authService;
 
-        public AuthController(IAuthService authService)
+        public AuthController(ILogger<AuthController> logger, IAuthService authService)
         {
+            _logger = logger;
             _authService = authService;
         }
 
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto model)
         {
+            _logger.LogInformation("RequestHeadersv2: {RequestHeaders}", HttpContext.Request.Headers);
+            _logger.LogInformation("ResponseHeadersv2: {ResponseHeaders}", HttpContext.Response.Headers);
+
             try
             {
                 if (ModelState.IsValid)
                 {
                     var authToken = await _authService.LoginAsync(model);
+                    _logger.LogInformation($"AuthToken: {authToken}");
+
                     if (authToken == null)
                         return Unauthorized();
+
 
                     return Ok(authToken);
                 }
