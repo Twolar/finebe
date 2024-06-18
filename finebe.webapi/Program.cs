@@ -17,7 +17,6 @@ using finebe.webapi.Src.Filters;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using finebe.webapi.Src.Repositories;
-using finebe.webapi.Src.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +26,7 @@ Env.Load();
 // Configure Serilog
 var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
-    .Enrich.WithCorrelationIdHeader(SettingsEnum.CorrelationIdHeaderKey)
+    .Enrich.WithCorrelationIdHeader(builder.Configuration.GetValue<string>("Settings:CorrelationIdKey"))
     .Enrich.FromLogContext()
     .CreateLogger();
 
@@ -41,6 +40,8 @@ builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<ITripService, TripService>();
 builder.Services.AddTransient<ITripRepository, TripRepository>();
 builder.Services.AddTransient<IAuthService, AuthService>();
+
+builder.Services.AddScoped<IFinebeDiagnosticContext, FinebeDiagnosticContext>();
 
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
