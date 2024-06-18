@@ -43,7 +43,7 @@ public class CorrelationIdMiddleware
             else
             {
                 correlationId = Guid.NewGuid().ToString();
-                _logger.LogInformation("Generated CorrelationId: {CorrelationId}", correlationId);
+                _logger.LogInformation("CorrelationId generated: {CorrelationId}", correlationId);
             }
 
             LogContext.PushProperty(correlationIdKey, correlationId);
