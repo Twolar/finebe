@@ -15,8 +15,9 @@ import ListItemText from "@mui/material/ListItemText";
 import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material";
 import { tokens } from "../theme";
+import logoIcon from "../assets/finebe-icon.png"; // Adjust the path as needed
 
-const appTitle = "Finebe";
+const appTitle = "finebe";
 
 export default function HeaderBar({ pages, settings }) {
   const theme = useTheme();
@@ -50,15 +51,22 @@ export default function HeaderBar({ pages, settings }) {
   };
 
   const appTitleComponent = (
-    <Typography
-      className="baloo-bhaijaan-2-font"
-      variant="h6"
-      noWrap
-      component="div"
-      sx={{ flexGrow: 1 }}
-    >
-      {appTitle}
-    </Typography>
+    <>
+      <img
+        src={logoIcon}
+        alt="Logo"
+        style={{ marginRight: "16px", height: "30px" }}
+      />
+      <Typography
+        className="baloo-bhaijaan-2-font"
+        variant="h6"
+        noWrap
+        component="div"
+        sx={{ flexGrow: 1 }}
+      >
+        {appTitle}
+      </Typography>
+    </>
   );
 
   const menuId = "primary-search-account-menu";
@@ -99,14 +107,9 @@ export default function HeaderBar({ pages, settings }) {
       onKeyDown={toggleDrawer(false)}
     >
       <List>
-      <ListItem
-        button
-        key={appTitle}
-        component={Link}
-        to="/"
-      >
-        {appTitleComponent}
-      </ListItem>
+        <ListItem button key={appTitle} component={Link} to="/">
+          {appTitleComponent}
+        </ListItem>
         {pages.map((page) => (
           <ListItem
             button
