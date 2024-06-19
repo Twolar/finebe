@@ -33,9 +33,7 @@ function RegisterForm() {
       setFormSuccess('Registration successful!');
 
       console.log('Registration successful!', formData);
-      // Here you can handle the form submission, e.g., send the data to your backend
       
-      // Clear the form fields
       setFormData({
         username: '',
         email: '',
