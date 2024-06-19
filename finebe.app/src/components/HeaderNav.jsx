@@ -1,30 +1,36 @@
 import React, { useState } from "react";
-import "@shoelace-style/shoelace/dist/themes/light.css";
+import { useNavigate } from "react-router-dom";
 import {
   SlDrawer,
   SlButton,
   SlMenu,
   SlMenuItem,
+  SlIcon,
 } from "@shoelace-style/shoelace/dist/react";
 
 function HeaderNav() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
 
+  const handleNavigation = (path) => {
+    navigate(path);
+    setIsDrawerOpen(false);
+  };
+
   const logoAndBrand = (
-    <>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <img
-          src="/finebe-icon.png"
-          alt="Logo"
-          style={{ height: "40px", marginRight: "1rem" }}
-        />
-        <span style={{ fontSize: "1.5rem", fontWeight: 500 }}>finebe</span>
-      </div>
-    </>
+    <div style={{ display: "flex", alignItems: "center" }}>
+      <img
+        src="/finebe-icon.png"
+        alt="Logo"
+        onClick={() => handleNavigation("/")}
+        style={{ cursor: "pointer", height: "40px", marginRight: "1rem" }}
+      />
+      <span onClick={() => handleNavigation("/")} style={{ cursor: "pointer", fontSize: "1.5rem", fontWeight: 500 }}>finebe</span>
+    </div>
   );
 
   return (
@@ -32,16 +38,17 @@ function HeaderNav() {
       <nav
         style={{
           padding: "1rem",
-          backgroundColor: "#f0f0f0",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          borderBottom: "1px solid #ccc",
+          boxShadow: "0 1px 6px var(--sl-color-neutral-100)",
+          maxWidth: "1500px",
+          margin: "auto",
         }}
       >
         {logoAndBrand}
         <SlButton onClick={toggleDrawer} pill>
-          <sl-icon name="list"></sl-icon>
+          <SlIcon name="list"></SlIcon>
         </SlButton>
       </nav>
 
@@ -49,12 +56,12 @@ function HeaderNav() {
         label="finebe"
         open={isDrawerOpen}
         onSlAfterHide={() => setIsDrawerOpen(false)}
+        style={{ border: "none", padding: "1rem" }}
       >
-        <SlMenu>
-          <SlMenuItem>Home</SlMenuItem>
-          <SlMenuItem>About</SlMenuItem>
-          <SlMenuItem>Services</SlMenuItem>
-          <SlMenuItem>Contact</SlMenuItem>
+        <SlMenu style={{ margin: "0" }}>
+          <SlMenuItem onClick={() => handleNavigation("/")}>Home</SlMenuItem>
+          <SlMenuItem onClick={() => handleNavigation("/about")}>About</SlMenuItem>
+          <SlMenuItem onClick={() => handleNavigation("/contact")}>Contact</SlMenuItem>
         </SlMenu>
       </SlDrawer>
     </>

@@ -1,10 +1,64 @@
 @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap");
 
-:host,
+:root,
 .sl-theme-dark {
-  /* your custom styles here */
-  font-family: "Source Sans Pro", sans-serif;
+  background-color: var(--sl-color-neutral-0);
+
+  --sl-font-weight-light: 200;
+  --sl-font-weight-normal: 300;
+  --sl-font-weight-semibold: 400;
+  --sl-font-weight-bold: 600;
+
+  --sl-font-mono: "Baloo Bhaijaan 2", sans-serif !important;
+  --sl-font-sans: "Baloo Bhaijaan 2", sans-serif !important;
+  --sl-font-serif: "Baloo Bhaijaan 2", sans-serif !important;
+
+  --sl-input-label-color: var(--sl-color-neutral-700);
+
+  --sl-color-primary-0: rgb(10 30 25);
+  --sl-color-primary-50: rgb(16 43 36);
+  --sl-color-primary-100: rgb(26 71 59);
+  --sl-color-primary-200: rgb(37 99 83);
+  --sl-color-primary-300: rgb(44 120 101);
+  --sl-color-primary-400: rgb(54 147 123);
+  --sl-color-primary-500: rgb(66 178 148);
+  --sl-color-primary-600: rgb(78 206 173);
+  --sl-color-primary-700: rgb(110 191 171);
+  --sl-color-primary-800: rgb(140 204 185);
+  --sl-color-primary-900: rgb(170 218 198);
+  --sl-color-primary-950: rgb(200 231 210);
+
+  --sl-color-neutral-0: rgb(20 26 44);
+  --sl-color-neutral-50: rgb(32 38 56);
+  --sl-color-neutral-100: rgb(57 63 78);
+  --sl-color-neutral-200: rgb(84 89 102);
+  --sl-color-neutral-300: rgb(104 108 120);
+  --sl-color-neutral-400: rgb(128 132 142);
+  --sl-color-neutral-500: rgb(157 160 167);
+  --sl-color-neutral-600: rgb(184 186 191);
+  --sl-color-neutral-700: rgb(205 206 210);
+  --sl-color-neutral-800: rgb(221 222 225);
+  --sl-color-neutral-900: rgb(236 236 238);
+  --sl-color-neutral-950: rgb(249 249 250);
+  --sl-color-neutral-1000: rgb(255 255 255);
+
+  --sl-color-danger-0: rgb(48 17 15);
+  --sl-color-danger-50: rgb(69 25 23);
+  --sl-color-danger-100: rgb(111 40 37);
+  --sl-color-danger-200: rgb(155 56 52);
+  --sl-color-danger-300: rgb(187 67 63);
+  --sl-color-danger-400: rgb(221 88 83);
+  --sl-color-danger-500: rgb(230 132 129);
+  --sl-color-danger-600: rgb(237 168 166);
+  --sl-color-danger-700: rgb(243 195 193);
+  --sl-color-danger-800: rgb(247 215 214);
+  --sl-color-danger-900: rgb(250 232 232);
+  --sl-color-danger-950: rgb(254 248 248);
+  --sl-color-danger-1000: rgb(255 255 255);
+
+  --sl-border-radius-medium: 0.25rem;
+  --sl-shadow-large: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 
 html,
@@ -14,7 +68,7 @@ body,
 .content {
   height: 100%;
   width: 100%;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Baloo Bhaijaan 2", sans-serif !important;
 }
 
 body {
